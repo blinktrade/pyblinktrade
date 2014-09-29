@@ -13,16 +13,9 @@ setup(
     "pyblinktrade",
   ],
   author="Rodrigo Souza",
-  entry_points = { 'console_scripts':
-    [ 
-      'blockchain_info_withdrawal = pyblinktrade.scripts.blockchain_info_withdrawal:main'  
-    ]
-  },
   install_requires=REQUIREMENTS,
   author_email='r@blinktrade.com',
   url='https://github.com/blinktrade/pyblinktrade',
   license='http://www.gnu.org/copyleft/gpl.html',
-  description='Utilities for Blinktrade plataform'
+  description='Blinktrade python api library'
 )
- 
-
