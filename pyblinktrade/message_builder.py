@@ -24,6 +24,29 @@ class MessageBuilder(object):
     return loginMsg
 
   @staticmethod
+  def getBrokerList(status_list, country=None, page=None, page_size=100, opt_request_id=None):
+    if not opt_request_id:
+      opt_request_id = random.randint(1,10000000)
+
+    msg = {
+      'MsgType' : 'U28',
+      'BrokerListReqID': opt_request_id
+    }
+    if page:
+      msg['Page'] = page
+
+    if page_size:
+      msg['PageSize'] = page_size
+
+    if status_list:
+      msg['StatusList'] = status_list
+
+    if country:
+      msg['Country'] = country
+
+    return  msg
+
+  @staticmethod
   def verifyCustomer(client_id, verify, verification_data, opt_request_id=None):
     if not opt_request_id:
       opt_request_id = random.randint(1,10000000)
