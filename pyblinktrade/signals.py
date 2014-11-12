@@ -1,4 +1,3 @@
-__author__ = 'rodrigo'
 import weakref
 import inspect
 import traceback
