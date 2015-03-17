@@ -10,17 +10,21 @@ class MessageBuilder(object):
       return {'MsgType': '1', 'TestReqID': int(time.time()*1000)}
 
   @staticmethod
-  def login(user, password):
+  def login(broker_id, user, password, second_factor=None):
     if not user or not password:
       raise ValueError('Invalid parameters')
 
     loginMsg = {
       'UserReqID': 'initial',
       'MsgType' : 'BE',
+      'BrokerID': broker_id,
       'Username': user,
       'Password': password,
       'UserReqTyp': '1'
     }
+    if second_factor:
+      loginMsg['SecondFactor'] = second_factor
+
     return loginMsg
 
   @staticmethod

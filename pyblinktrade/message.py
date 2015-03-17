@@ -251,6 +251,7 @@ class JsonMessage(BaseMessage):
       #TODO: Validate all fields of MarketData Request Cancel Message
 
     elif self.type == 'BE':  #logon
+      self.raise_exception_if_required_tag_is_missing('BrokerID')
       self.raise_exception_if_required_tag_is_missing('UserReqID')
       self.raise_exception_if_required_tag_is_missing('Username')
       self.raise_exception_if_required_tag_is_missing('UserReqTyp')
@@ -281,6 +282,7 @@ class JsonMessage(BaseMessage):
       #TODO: email is valid
 
     elif self.type == 'U10':  #Request Reset Password
+      self.raise_exception_if_required_tag_is_missing('BrokerID')
       self.raise_exception_if_required_tag_is_missing('Email')
 
     elif self.type == 'U12':  #Reset Password
