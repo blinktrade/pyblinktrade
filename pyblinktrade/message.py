@@ -181,6 +181,14 @@ class JsonMessage(BaseMessage):
       'U48': 'DepositMethodRequest',
       'U49': 'DepositMethodResponse',
 
+      'U50': 'APIKeyListRequest',
+      'U51': 'APIKeyListResponse',
+      'U52': 'APIKeyCreateRequest',
+      'U53': 'APIKeyCreateResponse',
+      'U54': 'APIKeyRevokeRequest',
+      'U55': 'APIKeyRevokeResponse',
+
+
       # Broker messages
       'B0':  'ProcessDeposit',
       'B1':  'ProcessDepositResponse',
@@ -400,7 +408,6 @@ class JsonMessage(BaseMessage):
         self.raise_exception_if_empty('AccountNumber')
         self.raise_exception_if_empty('AccountBranch')
         self.raise_exception_if_empty('CPFCNPJ')
-
     elif self.type == 'U7': # WithdrawResponse
       self.raise_exception_if_required_tag_is_missing('WithdrawReqID')
       self.raise_exception_if_not_a_integer('WithdrawReqID')
@@ -408,7 +415,6 @@ class JsonMessage(BaseMessage):
 
       self.raise_exception_if_required_tag_is_missing('WithdrawID')
       self.raise_exception_if_not_a_integer('WithdrawID')
-
     elif self.type == 'U8': #WithdrawRefresh
       self.raise_exception_if_required_tag_is_missing('WithdrawID')
       self.raise_exception_if_not_a_integer('WithdrawID')
@@ -421,14 +427,12 @@ class JsonMessage(BaseMessage):
 
       self.raise_exception_if_required_tag_is_missing('ConfirmationToken')
       self.raise_exception_if_empty('ConfirmationToken')
-
     elif self.type == 'U25': # WithdrawConfirmationResponse
       self.raise_exception_if_required_tag_is_missing('WithdrawReqID')
 
     elif self.type == 'U26': # Withdraw List Request
       self.raise_exception_if_required_tag_is_missing('WithdrawListReqID')
       self.raise_exception_if_empty('WithdrawListReqID')
-
     elif self.type == 'U27': # Withdraw List Response
       self.raise_exception_if_required_tag_is_missing('WithdrawListReqID')
       self.raise_exception_if_empty('WithdrawListReqID')
@@ -436,7 +440,6 @@ class JsonMessage(BaseMessage):
     elif self.type == 'U28': # Broker List Request
       self.raise_exception_if_required_tag_is_missing('BrokerListReqID')
       self.raise_exception_if_empty('BrokerListReqID')
-
     elif self.type == 'U29': # Broker List Response
       self.raise_exception_if_required_tag_is_missing('BrokerListReqID')
       self.raise_exception_if_empty('BrokerListReqID')
@@ -444,7 +447,6 @@ class JsonMessage(BaseMessage):
     elif self.type == 'U30': # DepositList Request
       self.raise_exception_if_required_tag_is_missing('DepositListReqID')
       self.raise_exception_if_empty('DepositListReqID')
-
     elif self.type == 'U31': # DepositList Response
       self.raise_exception_if_required_tag_is_missing('DepositListReqID')
       self.raise_exception_if_empty('DepositListReqID')
@@ -452,7 +454,6 @@ class JsonMessage(BaseMessage):
     elif self.type == 'U32': # Trade History Request
       self.raise_exception_if_required_tag_is_missing('TradeHistoryReqID')
       self.raise_exception_if_empty('TradeHistoryReqID')
-
     elif self.type == 'U33': # Trade History Response
       self.raise_exception_if_required_tag_is_missing('TradeHistoryReqID')
       self.raise_exception_if_empty('TradeHistoryReqID')
@@ -460,7 +461,6 @@ class JsonMessage(BaseMessage):
     elif self.type == 'U34': # LedgerList Request
       self.raise_exception_if_required_tag_is_missing('LedgerListReqID')
       self.raise_exception_if_empty('LedgerListReqID')
-
     elif self.type == 'U35': # LedgerList Response
       self.raise_exception_if_required_tag_is_missing('LedgerListReqID')
       self.raise_exception_if_empty('LedgerListReqID')
@@ -469,7 +469,6 @@ class JsonMessage(BaseMessage):
     elif self.type == 'U38': # Update User Profile Request
       self.raise_exception_if_required_tag_is_missing('UpdateReqID')
       self.raise_exception_if_empty('UpdateReqID')
-
     elif self.type == 'U39': # Update User Profile Response
       self.raise_exception_if_required_tag_is_missing('UpdateReqID')
       self.raise_exception_if_empty('UpdateReqID')
@@ -490,14 +489,49 @@ class JsonMessage(BaseMessage):
     elif self.type == 'U44': # Confirm Trusted Address Request
       self.raise_exception_if_required_tag_is_missing('ConfirmTrustedAddressReqID')
       self.raise_exception_if_empty('ConfirmTrustedAddressReqID')
-
     elif self.type == 'U45': # Confirm Trusted Address Response
       self.raise_exception_if_required_tag_is_missing('ConfirmTrustedAddressReqID')
       self.raise_exception_if_empty('ConfirmTrustedAddressReqID')
-
     elif self.type == 'U46': # Suggest Trusted Address Publish
       self.raise_exception_if_required_tag_is_missing('SuggestTrustedAddressReqID')
       self.raise_exception_if_empty('SuggestTrustedAddressReqID')
+
+
+    elif self.type == 'U50': # APIKey List Request
+      self.raise_exception_if_required_tag_is_missing('APIKeyListReqID')
+      self.raise_exception_if_empty('APIKeyListReqID')
+    elif self.type == 'U51': # APIKey List Response
+      self.raise_exception_if_required_tag_is_missing('APIKeyListReqID')
+      self.raise_exception_if_empty('APIKeyListReqID')
+
+    elif self.type == 'U52': # APIKey Create Request
+      self.raise_exception_if_required_tag_is_missing('APIKeyCreateReqID')
+      self.raise_exception_if_required_tag_is_missing('Label')
+      self.raise_exception_if_required_tag_is_missing('PermissionList')
+      self.raise_exception_if_required_tag_is_missing('IPWhiteList')
+      self.raise_exception_if_empty('APIKeyCreateReqID')
+      self.raise_exception_if_empty('Label')
+      self.raise_exception_if_empty('PermissionList')
+    elif self.type == 'U53': # APIKey Create Response
+      self.raise_exception_if_required_tag_is_missing('APIKeyCreateReqID')
+      self.raise_exception_if_required_tag_is_missing('APIKey')
+      self.raise_exception_if_required_tag_is_missing('APISecret')
+      self.raise_exception_if_required_tag_is_missing('APIPassword')
+      self.raise_exception_if_empty('APIKey')
+      self.raise_exception_if_empty('APISecret')
+      self.raise_exception_if_empty('APIPassword')
+
+
+    elif self.type == 'U54': # APIKey Revoke Request
+      self.raise_exception_if_required_tag_is_missing('APIKeyRevokeReqID')
+      self.raise_exception_if_required_tag_is_missing('APIKey')
+      self.raise_exception_if_empty('APIKeyRevokeReqID')
+      self.raise_exception_if_empty('APIKey')
+    elif self.type == 'U55': # APIKey Revoke Response
+      self.raise_exception_if_required_tag_is_missing('APIKeyRevokeReqID')
+      self.raise_exception_if_empty('APIKeyRevokeReqID')
+
+
 
     elif self.type == 'B0': # Deposit Payment Confirmation
       self.raise_exception_if_required_tag_is_missing('ProcessDepositReqID')
