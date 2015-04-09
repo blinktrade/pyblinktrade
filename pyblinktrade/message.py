@@ -427,8 +427,6 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_not_a_integer('WithdrawReqID')
       self.raise_exception_if_not_greater_than_zero('WithdrawReqID')
 
-      self.raise_exception_if_required_tag_is_missing('ConfirmationToken')
-      self.raise_exception_if_empty('ConfirmationToken')
     elif self.type == 'U25': # WithdrawConfirmationResponse
       self.raise_exception_if_required_tag_is_missing('WithdrawReqID')
 
