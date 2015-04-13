@@ -41,6 +41,28 @@ class Signal():
       else:
         self._functions.add(slot)
 
+  def disconnect(self, slot, sender=None):
+    if sender:
+      if inspect.ismethod(slot):
+        if sender in self._methods_subs:
+          if slot.__self__ in self._methods_subs[sender]:
+            self._methods_subs[sender][slot.__self__].remove(slot.__func__)
+            if len(self._methods_subs[sender][slot.__self__])== 0:
+              del self._methods_subs[sender][slot.__self__]
+              if len(self._methods_subs[sender]) ==0:
+                del self._methods_subs[sender]
+      else:
+        if sender in self._functions_subs:
+          self._functions_subs[sender].remove(slot)
+          if len(self._functions_subs[sender]) == 0:
+            del self._functions_subs[sender]
+    else:
+      if inspect.ismethod(slot):
+        if slot.__self__ in self._methods:
+          del self._methods[slot.__self__][slot.__func__]
+      else:
+        self._functions.remove(slot)
+
   def __call__(self, sender, data=None, error_signal_on_error=True):
     with self._lock:
       sent = False
