@@ -51,13 +51,14 @@ class MessageBuilder(object):
     return  msg
 
   @staticmethod
-  def verifyCustomer(client_id, verify, verification_data, opt_request_id=None):
+  def verifyCustomer(broker_id, client_id, verify, verification_data, opt_request_id=None):
     if not opt_request_id:
       opt_request_id = random.randint(1,10000000)
 
     return {
       'MsgType': 'B8',
       'VerifyCustomerReqID': opt_request_id,
+      'BrokerID': broker_id,
       'ClientID': client_id,
       'Verify':  verify,
       'VerificationData': verification_data
