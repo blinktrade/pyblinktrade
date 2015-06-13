@@ -202,6 +202,12 @@ class JsonMessage(BaseMessage):
       'B9':  'VerifyCustomerResponse',
       'B11': 'VerifyCustomerRefresh',
 
+      # System messages
+      'S0':  'AccessLog',
+
+      'S2':  'AwayMarketTickerRequest',
+      'S3':  'AwayMarketTickerResponse',
+      'S4':  'AwayMarketTickerPublish',
 
       # Administrative messages
       'A0':  'DbQueryRequest',
