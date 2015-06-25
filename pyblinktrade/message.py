@@ -188,6 +188,13 @@ class JsonMessage(BaseMessage):
       'U54': 'APIKeyRevokeRequest',
       'U55': 'APIKeyRevokeResponse',
 
+      'U56': 'GetCreditLineOfCreditRequest',
+      'U57': 'GetCreditLineOfCreditResponse',
+      'U58': 'PayCreditLineOfCreditRequest',
+      'U59': 'PayCreditLineOfCreditResponse',
+      'U60': 'LineOfCreditListRequest',
+      'U61': 'LineOfCreditListResponse',
+      
 
       # Broker messages
       'B0':  'ProcessDeposit',
