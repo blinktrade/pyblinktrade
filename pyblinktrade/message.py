@@ -115,6 +115,7 @@ class JsonMessage(BaseMessage):
       'BF':  'UserResponse',
       'D':   'NewOrderSingle',
       'F':   'OrderCancelRequest',
+      '8':   'ExecutionReport',
       'x':   'SecurityListRequest',
       'y':   'SecurityList',
       'e':   'SecurityStatusRequest',
