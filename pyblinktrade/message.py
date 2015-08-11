@@ -195,6 +195,9 @@ class JsonMessage(BaseMessage):
       'U59': 'PayCreditLineOfCreditResponse',
       'U60': 'LineOfCreditListRequest',
       'U61': 'LineOfCreditListResponse',
+      'U62': 'EnableCreditLineOfCreditRequest',
+      'U63': 'EnableCreditLineOfCreditResponse',
+      'U65': 'LineOfCreditRefresh',
       
 
       # Broker messages
