@@ -220,6 +220,9 @@ class JsonMessage(BaseMessage):
       'S3':  'AwayMarketTickerResponse',
       'S4':  'AwayMarketTickerPublish',
 
+      'S6':  'RestAPIRequest',
+      'S7':  'RestAPIResponse',
+
       # Administrative messages
       'A0':  'DbQueryRequest',
       'A1':  'DbQueryResponse',
@@ -612,10 +615,53 @@ class JsonMessage(BaseMessage):
       if 'VerificationData' in self.message:
         self.raise_exception_if_empty('VerificationData')
 
-
     elif self.type == 'B9': # Verify Customer Response
       self.raise_exception_if_required_tag_is_missing('VerifyCustomerReqID')
 
+    elif self.type == 'S2': # Away Market Ticker Request
+      self.raise_exception_if_required_tag_is_missing('AwayMarketTickerReqID')
+      self.raise_exception_if_required_tag_is_missing('Market')
+      self.raise_exception_if_required_tag_is_missing('Symbol')
+      self.raise_exception_if_required_tag_is_missing('BestBid')
+      self.raise_exception_if_required_tag_is_missing('BestAsk')
+      self.raise_exception_if_required_tag_is_missing('LastPx')
+      self.raise_exception_if_required_tag_is_missing('HighPx')
+      self.raise_exception_if_required_tag_is_missing('LowPx')
+      self.raise_exception_if_required_tag_is_missing('Volume')
+      self.raise_exception_if_required_tag_is_missing('VWAP')
+
+      self.raise_exception_if_not_a_integer('AwayMarketTickerReqID')
+      self.raise_exception_if_empty('Market')
+      self.raise_exception_if_empty('Symbol')
+      self.raise_exception_if_not_a_integer('BestBid')
+      self.raise_exception_if_not_a_integer('BestBid')
+      self.raise_exception_if_not_a_integer('BestAsk')
+      self.raise_exception_if_not_a_integer('LastPx')
+      self.raise_exception_if_not_a_integer('HighPx')
+      self.raise_exception_if_not_a_integer('LowPx')
+      self.raise_exception_if_not_a_integer('Volume')
+      self.raise_exception_if_not_a_integer('VWAP')
+
+
+    elif self.type == 'S6': #Rest Api Request
+      self.raise_exception_if_required_tag_is_missing('RestAPIReqID')
+      self.raise_exception_if_required_tag_is_missing('APIKey')
+      self.raise_exception_if_required_tag_is_missing('Signature')
+      self.raise_exception_if_required_tag_is_missing('Payload')
+      self.raise_exception_if_required_tag_is_missing('DigestMod')
+      self.raise_exception_if_required_tag_is_missing('Nonce')
+      self.raise_exception_if_required_tag_is_missing('Message')
+      self.raise_exception_if_required_tag_is_missing('RemoteIP')
+
+      self.raise_exception_if_not_a_integer('RestAPIReqID')
+      self.raise_exception_if_empty('APIKey')
+      self.raise_exception_if_empty('Signature')
+      self.raise_exception_if_empty('Payload')
+      self.raise_exception_if_empty('DigestMod')
+      self.raise_exception_if_not_a_integer('Nonce')
+      self.raise_exception_if_not_greater_than_zero('Nonce')
+      self.raise_exception_if_empty('Message')
+      self.raise_exception_if_empty('RemoteIP')
 
   def has(self, attr):
     return attr in self.message
