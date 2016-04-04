@@ -28,7 +28,7 @@ class MessageBuilder(object):
     return loginMsg
 
   @staticmethod
-  def getDepositList(status_list, client_id=None, page=0, page_size=100,opt_request_id=None):
+  def getDepositList(status_list, opt_filter=None, client_id=None, page=0, page_size=100,opt_request_id=None):
     if not opt_request_id:
       opt_request_id = random.randint(1,10000000)
 
@@ -41,6 +41,9 @@ class MessageBuilder(object):
     }
     if client_id:
       msg["ClientID"] = client_id
+
+    if opt_filter:
+      msg["Filter"] = opt_filter
     return msg
 
   @staticmethod
@@ -58,7 +61,7 @@ class MessageBuilder(object):
     return msg
 
   @staticmethod
-  def getWithdrawList(status_list, client_id=None, page=0, page_size=100,opt_request_id=None):
+  def getWithdrawList(status_list, opt_filter=None, client_id=None, page=0, page_size=100,opt_request_id=None):
     if not opt_request_id:
       opt_request_id = random.randint(1,10000000)
 
@@ -71,6 +74,9 @@ class MessageBuilder(object):
     }
     if client_id:
       msg["ClientID"] = client_id
+    if opt_filter:
+      msg["Filter"] = opt_filter
+
     return msg
 
   @staticmethod
