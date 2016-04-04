@@ -28,6 +28,52 @@ class MessageBuilder(object):
     return loginMsg
 
   @staticmethod
+  def getDepositList(status_list, client_id=None, page=0, page_size=100,opt_request_id=None):
+    if not opt_request_id:
+      opt_request_id = random.randint(1,10000000)
+
+    msg = {
+      "MsgType":"U30",
+      "DepositListReqID":opt_request_id,
+      "Page":page,
+      "PageSize":page_size,
+      "StatusList":status_list
+    }
+    if client_id:
+      msg["ClientID"] = client_id
+    return msg
+
+  @staticmethod
+  def updateProfile(update_dict, opt_user_id=None,opt_request_id=None):
+    if not opt_request_id:
+      opt_request_id = random.randint(1,10000000)
+
+    msg = {
+      "MsgType":"U38",
+      "UpdateReqID":opt_request_id,
+      "Fields": update_dict
+    }
+    if opt_user_id:
+      msg["UserID"] = opt_user_id
+    return msg
+
+  @staticmethod
+  def getWithdrawList(status_list, client_id=None, page=0, page_size=100,opt_request_id=None):
+    if not opt_request_id:
+      opt_request_id = random.randint(1,10000000)
+
+    msg = {
+      "MsgType":"U26",
+      "WithdrawListReqID":opt_request_id,
+      "Page":page,
+      "PageSize":page_size,
+      "StatusList":status_list,
+    }
+    if client_id:
+      msg["ClientID"] = client_id
+    return msg
+
+  @staticmethod
   def getBrokerList(status_list, country=None, page=None, page_size=100, opt_request_id=None):
     if not opt_request_id:
       opt_request_id = random.randint(1,10000000)
@@ -110,8 +156,20 @@ class MessageBuilder(object):
     }
     if client_id:
       msg['ClientID'] = client_id
-
     return msg
+
+  @staticmethod
+  def requestPositions(request_id = None, client_id = None):
+    if not request_id:
+      request_id = random.randint(1,10000000)
+    msg = {
+      'MsgType': 'U42',
+      'PositionReqID': request_id
+    }
+    if client_id:
+      msg['ClientID'] = client_id
+    return msg
+
 
   @staticmethod
   def requestMarketData(request_id,  symbols, entry_types, subscription_type='1', market_depth=0 ,update_type = '1'):
