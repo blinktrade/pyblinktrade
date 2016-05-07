@@ -208,6 +208,8 @@ class JsonMessage(BaseMessage):
       'U75': 'CardCreateResponse',
       'U76': 'CardDisableRequest',
       'U77': 'CardDisableResponse',
+      'U78': 'WithdrawCommentRequest',
+      'U79': 'WithdrawCommentResponse',
 
       # Broker messages
       'B0':  'ProcessDeposit',
@@ -584,6 +586,17 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_required_tag_is_missing('CardID')
       self.raise_exception_if_empty('CardDisableReqID')
       self.raise_exception_if_empty('CardID')
+
+    elif self.type == 'U78': # WithdrawCommentRequest WithdrawReqID
+      self.raise_exception_if_required_tag_is_missing('WithdrawReqID')
+      self.raise_exception_if_not_a_integer('WithdrawReqID')
+      self.raise_exception_if_not_greater_than_zero('WithdrawReqID')
+      self.raise_exception_if_required_tag_is_missing('WithdrawID')
+      self.raise_exception_if_required_tag_is_missing('Message')
+
+    elif self.type == 'U79': # WithdrawCommentResponse
+      self.raise_exception_if_required_tag_is_missing('WithdrawReqID')
+      self.raise_exception_if_required_tag_is_missing('WithdrawID')
 
 
 
