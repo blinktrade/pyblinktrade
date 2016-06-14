@@ -233,6 +233,9 @@ class JsonMessage(BaseMessage):
 
       'S6':  'RestAPIRequest',
       'S7':  'RestAPIResponse',
+      
+      'S8':  'UpdateInstrumentPriceBandRequest',
+      'S9':  'UpdateInstrumentPriceBandResponse',
 
       # Administrative messages
       'A0':  'DbQueryRequest',
@@ -709,6 +712,22 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_not_greater_than_zero('Nonce')
       self.raise_exception_if_empty('Message')
       self.raise_exception_if_empty('RemoteIP')
+      
+      
+    elif self.type == 'S8': #Update Instrument Price Band Request
+      self.raise_exception_if_required_tag_is_missing('UpdateReqID')
+      self.raise_exception_if_required_tag_is_missing('Symbol')
+      self.raise_exception_if_required_tag_is_missing('MinPrice')
+      self.raise_exception_if_required_tag_is_missing('MaxPrice')
+      
+      self.raise_exception_if_not_a_integer('UpdateReqID')
+      self.raise_exception_if_not_a_integer('MinPrice')
+      self.raise_exception_if_not_a_integer('MaxPrice')
+   
+    elif self.type == 'S9': #Update Instrument Price Band Response
+      self.raise_exception_if_required_tag_is_missing('UpdateReqID')
+      
+      
 
   def has(self, attr):
     return attr in self.message
