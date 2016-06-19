@@ -726,8 +726,15 @@ class JsonMessage(BaseMessage):
    
     elif self.type == 'S9': #Update Instrument Price Band Response
       self.raise_exception_if_required_tag_is_missing('UpdateReqID')
-      
-      
+
+  def __contains__(self, value):
+    return value in self.message
+
+  def __getitem__(self, key):
+    return self.message[key]
+
+  def __setitem__(self, key, val):
+    return self.set(key, val)
 
   def has(self, attr):
     return attr in self.message

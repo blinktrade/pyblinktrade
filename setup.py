@@ -2,9 +2,7 @@
 
 from setuptools import setup
 
-version = "0.4"
-
-REQUIREMENTS = [i.strip() for i in open("requirements.txt").readlines()]
+version = "0.5"
 
 setup(
   name="pyblinktrade",
@@ -13,7 +11,7 @@ setup(
     "pyblinktrade",
   ],
   author="Rodrigo Souza",
-  install_requires=REQUIREMENTS,
+  install_requires=[],
   author_email='r@blinktrade.com',
   url='https://github.com/blinktrade/pyblinktrade',
   license='http://www.gnu.org/copyleft/gpl.html',
