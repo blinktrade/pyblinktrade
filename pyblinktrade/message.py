@@ -237,6 +237,11 @@ class JsonMessage(BaseMessage):
       'S8':  'UpdateInstrumentPriceBandRequest',
       'S9':  'UpdateInstrumentPriceBandResponse',
 
+      'S10': 'DocumentPublish',
+
+      'S12': 'DocumentListRequest',
+      'S13': 'DocumentListResponse',
+
       # Administrative messages
       'A0':  'DbQueryRequest',
       'A1':  'DbQueryResponse',
@@ -726,6 +731,19 @@ class JsonMessage(BaseMessage):
    
     elif self.type == 'S9': #Update Instrument Price Band Response
       self.raise_exception_if_required_tag_is_missing('UpdateReqID')
+
+    elif self.type == 'S12': #Document List Request
+      self.raise_exception_if_required_tag_is_missing('DocumentListReqID')
+      self.raise_exception_if_required_tag_is_missing('Page')
+      self.raise_exception_if_required_tag_is_missing('PageSize')
+      self.raise_exception_if_required_tag_is_missing('DocumentName')
+      self.raise_exception_if_required_tag_is_missing('Since')
+      self.raise_exception_if_not_a_integer('DocumentListReqID')
+      self.raise_exception_if_not_a_integer('Page')
+      self.raise_exception_if_not_a_integer('PageSize')
+      self.raise_exception_if_empty('DocumentName')
+      self.raise_exception_if_not_a_integer('Since')
+
 
   def __contains__(self, value):
     return value in self.message
