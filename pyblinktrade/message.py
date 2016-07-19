@@ -356,10 +356,17 @@ class JsonMessage(BaseMessage):
 
       self.raise_exception_if_required_tag_is_missing('OrdType')
 
-      self.raise_exception_if_not_in('OrdType', ( '1', '2' )) # only market and limited orders
+      self.raise_exception_if_not_in('OrdType', ( '1', '2', '3', '4' )) # only market, limited, stop market and stop limited orders
 
       if self.get('OrdType') == '2':
         self.raise_exception_if_required_tag_is_missing('Price')  # price is required for limited orders
+        self.raise_exception_if_not_a_integer('Price')
+        self.raise_exception_if_not_greater_than_zero('Price')
+      elif self.get('OrdType') == '3':
+        self.raise_exception_if_required_tag_is_missing('StopPx')  # stop price is required for stop orders
+      elif self.get('OrdType') == '4':
+        self.raise_exception_if_required_tag_is_missing('StopPx')  # stop price is required for stop orders
+        self.raise_exception_if_required_tag_is_missing('Price')   # price is required for stop limit orders
         self.raise_exception_if_not_a_integer('Price')
         self.raise_exception_if_not_greater_than_zero('Price')
 
