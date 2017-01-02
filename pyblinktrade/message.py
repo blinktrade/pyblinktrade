@@ -241,6 +241,9 @@ class JsonMessage(BaseMessage):
 
       'S12': 'DocumentListRequest',
       'S13': 'DocumentListResponse',
+      	
+      'S14' : 'CryptoWithdrawNetworkFeeTransferRequest',
+			'S15' : 'CryptoWithdrawNetworkFeeTransferResponse',
 
       # Administrative messages
       'A0':  'DbQueryRequest',
@@ -754,6 +757,15 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_not_a_integer('PageSize')
       self.raise_exception_if_empty('DocumentName')
       self.raise_exception_if_not_a_integer('Since')
+      
+    elif self.type == 'S14': # Crypto Network Fee Charge Request
+      self.raise_exception_if_required_tag_is_missing('CryptoNetworkFeeChargeReqID')
+      self.raise_exception_if_required_tag_is_missing('ClientID')
+      self.raise_exception_if_required_tag_is_missing('Currency')
+      self.raise_exception_if_required_tag_is_missing('Amount')
+      
+      self.raise_exception_if_not_a_integer('Amount')
+      self.raise_exception_if_not_greater_than_zero('Amount')
 
 
   def __contains__(self, value):
