@@ -66,17 +66,38 @@ class JsonMessage(BaseMessage):
     if not val :
       raise InvalidMessageFieldException(self.raw_message, self.message, tag, val)
 
+  def raise_exception_if_not_string(self, tag):
+    val = self.get(tag)
+    if not( type(val) == str or type(val) == unicode):
+      raise InvalidMessageFieldException(self.raw_message, self.message, tag, val)
+
   def raise_exception_if_not_greater_than_zero(self, tag):
     self.raise_exception_if_not_a_number(tag)
     val = self.get(tag)
     if not val > 0:
       raise InvalidMessageFieldException(self.raw_message, self.message, tag, val)
 
+  def raise_exception_if_optional_field_is_a_negative_number(self, tag):
+    val = self.message.get(tag)
+    if val:
+      if not( type(val) == float or type(val) == int) or val < 0:
+        raise InvalidMessageFieldException(self.raw_message, self.message, tag, val)
+
   def raise_exception_if_not_in(self, tag, list):
     val = self.get(tag)
     if val not in list :
       raise InvalidMessageFieldException(self.raw_message, self.message, tag, val)
 
+  def raise_exception_if_length_is_greater_than(self, tag, length):
+    val = self.get(tag)
+    if len(val) > length:
+      raise InvalidMessageFieldException(self.raw_message, self.message, tag, val)
+
+  def raise_exception_if_length_is_less_than(self, tag, length):
+    val = self.get(tag)
+    if len(val) < length:
+      raise InvalidMessageFieldException(self.raw_message, self.message, tag, val)
+      
   def __str__(self):
     return str(self.message)
 
@@ -241,9 +262,9 @@ class JsonMessage(BaseMessage):
 
       'S12': 'DocumentListRequest',
       'S13': 'DocumentListResponse',
-      	
+        
       'S14' : 'CryptoWithdrawNetworkFeeTransferRequest',
-			'S15' : 'CryptoWithdrawNetworkFeeTransferResponse',
+      'S15' : 'CryptoWithdrawNetworkFeeTransferResponse',
 
       # Administrative messages
       'A0':  'DbQueryRequest',
@@ -309,19 +330,26 @@ class JsonMessage(BaseMessage):
       #TODO: Validate all fields of Logon Message
 
     elif self.type == 'U0':  #Signup
+      # Username must be between 3 bytes and 10 bytes
       self.raise_exception_if_required_tag_is_missing('Username')
+      self.raise_exception_if_not_string('Username')
+      self.raise_exception_if_length_is_less_than('Username', 3)
+      self.raise_exception_if_length_is_greater_than('Username', 10)
+      
+      # password is greater than 8 bytes
       self.raise_exception_if_required_tag_is_missing('Password')
+      self.raise_exception_if_not_string('Password')
+      self.raise_exception_if_length_is_less_than('Password', 8)
+      
+      # check the Email
       self.raise_exception_if_required_tag_is_missing('Email')
-      self.raise_exception_if_required_tag_is_missing('BrokerID')
-
-
-      self.raise_exception_if_empty('Username')
-      self.raise_exception_if_empty('Password')
       self.raise_exception_if_empty('Email')
+      #TODO: create a function to verify the email is valid
+      
+      # check the BrokerID
+      self.raise_exception_if_required_tag_is_missing('BrokerID')
       self.raise_exception_if_not_a_integer('BrokerID')
 
-      #TODO: password is greater than 8 bytes
-      #TODO: email is valid
 
     elif self.type == 'U10':  #Request Reset Password
       self.raise_exception_if_required_tag_is_missing('BrokerID')
@@ -336,6 +364,7 @@ class JsonMessage(BaseMessage):
 
     elif self.type == 'U18': # Deposit Request
       self.raise_exception_if_required_tag_is_missing('DepositReqID')
+      self.raise_exception_if_optional_field_is_a_negative_number('Value')
 
       if "DepositMethodID" not in self.message and "DepositID" not in self.message  and 'Currency' not in self.message:
         raise InvalidMessageMissingTagException(self.raw_message, self.message, "DepositID,DepositMethodID,Currency")
