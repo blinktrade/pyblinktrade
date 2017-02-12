@@ -244,6 +244,12 @@ class JsonMessage(BaseMessage):
       'B8':  'VerifyCustomerRequest',
       'B9':  'VerifyCustomerResponse',
       'B11': 'VerifyCustomerRefresh',
+      'B12': 'ClearingHistoryRequest',
+      'B13': 'ClearingHistoryResponse',
+      'B14': 'ProcessClearingRequest',
+      'B15': 'ProcessClearingResponse',
+      'B17': 'ProcessClearingRefresh',
+      
 
       # System messages
       'S0':  'AccessLog',
@@ -715,6 +721,39 @@ class JsonMessage(BaseMessage):
 
     elif self.type == 'B9': # Verify Customer Response
       self.raise_exception_if_required_tag_is_missing('VerifyCustomerReqID')
+      
+    elif self.type == 'B12': # Clearing History Request
+      self.raise_exception_if_required_tag_is_missing('ClearingHistoryReqID')
+      self.raise_exception_if_required_tag_is_missing('Page')
+      self.raise_exception_if_required_tag_is_missing('PageSize')
+      self.raise_exception_if_not_a_integer('ClearingHistoryReqID')
+      self.raise_exception_if_not_a_integer('Page')
+      self.raise_exception_if_not_a_integer('PageSize')
+    
+    elif self.type == 'B13': # Clearing History Response
+      self.raise_exception_if_required_tag_is_missing('ClearingHistoryReqID')
+    
+    elif self.type == 'B14': # Process Clearing Request
+      self.raise_exception_if_required_tag_is_missing('ProcessClearingReqID')
+      self.raise_exception_if_required_tag_is_missing('Action')
+    
+    elif self.type == 'B15': # Process Clearing Response
+      self.raise_exception_if_required_tag_is_missing('ProcessClearingReqID')
+      self.raise_exception_if_required_tag_is_missing('ClearingProcessID')
+      self.raise_exception_if_required_tag_is_missing('ClearingStatus')
+      self.raise_exception_if_required_tag_is_missing('PartyBrokerID')
+      self.raise_exception_if_required_tag_is_missing('CounterPartyBrokerID')
+      self.raise_exception_if_required_tag_is_missing('PartyBrokerSettlementAccount')
+      self.raise_exception_if_required_tag_is_missing('CounterPartyBrokerSettlementAccount')
+      
+    
+    elif self.type == 'B17': # Process Clearing Refresh
+      self.raise_exception_if_required_tag_is_missing('ClearingProcessID')
+      self.raise_exception_if_required_tag_is_missing('ClearingStatus')
+      self.raise_exception_if_required_tag_is_missing('PartyBrokerID')
+      self.raise_exception_if_required_tag_is_missing('CounterPartyBrokerID')
+      self.raise_exception_if_required_tag_is_missing('PartyBrokerSettlementAccount')
+      self.raise_exception_if_required_tag_is_missing('CounterPartyBrokerSettlementAccount')
 
     elif self.type == 'S2': # Away Market Ticker Request
       self.raise_exception_if_required_tag_is_missing('AwayMarketTickerReqID')
