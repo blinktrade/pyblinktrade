@@ -28,7 +28,7 @@ class InvalidMessageFieldException(InvalidMessageException):
     return 'Invalid value tag(%s)=%s'%(self.tag, self.value)
 
 class BaseMessage(object):
-  MAX_MESSAGE_LENGTH = 4096
+  MAX_MESSAGE_LENGTH = 1024*1000
   def __init__(self, raw_message):
     self.raw_message = raw_message
 
