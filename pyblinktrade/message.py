@@ -141,9 +141,6 @@ class JsonMessage(BaseMessage):
       'y':   'SecurityList',
       'e':   'SecurityStatusRequest',
       'f':   'SecurityStatus',
-      'AN':  'RequestForPositions',
-      'AO':  'RequestForPositionsAck',
-      'AP':  'PositionReport',
 
       # User  messages
       'U0':  'Signup',
