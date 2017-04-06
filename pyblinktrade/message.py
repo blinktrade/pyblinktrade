@@ -340,12 +340,11 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_required_tag_is_missing('Username')
       self.raise_exception_if_not_string('Username')
       self.raise_exception_if_length_is_less_than('Username', 3)
-      self.raise_exception_if_length_is_greater_than('Username', 10)
+      self.raise_exception_if_length_is_greater_than('Username', 15)
       
       # password is greater than 8 bytes
       self.raise_exception_if_required_tag_is_missing('Password')
       self.raise_exception_if_not_string('Password')
-      self.raise_exception_if_length_is_less_than('Password', 8)
       
       # check the Email
       self.raise_exception_if_required_tag_is_missing('Email')
