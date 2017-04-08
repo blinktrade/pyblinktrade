@@ -152,10 +152,10 @@ class JsonMessage(BaseMessage):
       'U7':  'WithdrawResponse',
       'U9':  'WithdrawRefresh',
 
-      'U10': 'ResetPasswordRequest',
-      'U11': 'ResetPasswordResponse',
-      'U12': 'ResetPasswordRequest',
-      'U13': 'ResetPasswordResponse',
+      'U10': 'CreatePasswordResetRequest',
+      'U11': 'CreatePasswordResetResponse',
+      'U12': 'ProcessPasswordResetRequest',
+      'U13': 'ProcessPasswordResetResponse',
       'U16': 'EnableDisableTwoFactorAuthenticationRequest',
       'U17': 'EnableDisableTwoFactorAuthenticationResponse',
 
@@ -234,8 +234,8 @@ class JsonMessage(BaseMessage):
       'B1':  'ProcessDepositResponse',
       'B2':  'CustomerListRequest',
       'B3':  'CustomerListResponse',
-      'B4':  'CustomerRequest',
-      'B5':  'CustomerResponse',
+      'B4':  'CustomerDetailRequest',
+      'B5':  'CustomerDetailResponse',
       'B6':  'ProcessWithdraw',
       'B7':  'ProcessWithdrawResponse',
       'B8':  'VerifyCustomerRequest',
@@ -353,11 +353,11 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_not_a_integer('BrokerID')
 
 
-    elif self.type == 'U10':  #Request Reset Password
+    elif self.type == 'U10':  # Create Password Reset Request
       self.raise_exception_if_required_tag_is_missing('BrokerID')
       self.raise_exception_if_required_tag_is_missing('Email')
 
-    elif self.type == 'U12':  #Reset Password
+    elif self.type == 'U12':  # Process Password Reset Request
       self.raise_exception_if_required_tag_is_missing('Token')
       self.raise_exception_if_required_tag_is_missing('NewPassword')
 
@@ -669,9 +669,9 @@ class JsonMessage(BaseMessage):
     elif self.type == 'B3': # Customer List Response
       pass
 
-    elif self.type == 'B4': # Customer Request
+    elif self.type == 'B4': # Customer Detail Request
       pass
-    elif self.type == 'B5': # Customer Response
+    elif self.type == 'B5': # Customer Detail Response
       pass
 
     elif self.type == 'B6': # Process Withdraw
