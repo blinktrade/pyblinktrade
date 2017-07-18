@@ -28,7 +28,7 @@ class InvalidMessageFieldException(InvalidMessageException):
     return 'Invalid value tag(%s)=%s'%(self.tag, self.value)
 
 class BaseMessage(object):
-  MAX_MESSAGE_LENGTH = 4096
+  MAX_MESSAGE_LENGTH = 1024*1000
   def __init__(self, raw_message):
     self.raw_message = raw_message
 
@@ -137,13 +137,11 @@ class JsonMessage(BaseMessage):
       'D':   'NewOrderSingle',
       'F':   'OrderCancelRequest',
       '8':   'ExecutionReport',
+      '9':   'OrderCancelReject',
       'x':   'SecurityListRequest',
       'y':   'SecurityList',
       'e':   'SecurityStatusRequest',
       'f':   'SecurityStatus',
-      'AN':  'RequestForPositions',
-      'AO':  'RequestForPositionsAck',
-      'AP':  'PositionReport',
 
       # User  messages
       'U0':  'Signup',
@@ -155,10 +153,10 @@ class JsonMessage(BaseMessage):
       'U7':  'WithdrawResponse',
       'U9':  'WithdrawRefresh',
 
-      'U10': 'ResetPasswordRequest',
-      'U11': 'ResetPasswordResponse',
-      'U12': 'ResetPasswordRequest',
-      'U13': 'ResetPasswordResponse',
+      'U10': 'CreatePasswordResetRequest',
+      'U11': 'CreatePasswordResetResponse',
+      'U12': 'ProcessPasswordResetRequest',
+      'U13': 'ProcessPasswordResetResponse',
       'U16': 'EnableDisableTwoFactorAuthenticationRequest',
       'U17': 'EnableDisableTwoFactorAuthenticationResponse',
 
@@ -237,8 +235,8 @@ class JsonMessage(BaseMessage):
       'B1':  'ProcessDepositResponse',
       'B2':  'CustomerListRequest',
       'B3':  'CustomerListResponse',
-      'B4':  'CustomerRequest',
-      'B5':  'CustomerResponse',
+      'B4':  'CustomerDetailRequest',
+      'B5':  'CustomerDetailResponse',
       'B6':  'ProcessWithdraw',
       'B7':  'ProcessWithdrawResponse',
       'B8':  'VerifyCustomerRequest',
@@ -343,12 +341,11 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_required_tag_is_missing('Username')
       self.raise_exception_if_not_string('Username')
       self.raise_exception_if_length_is_less_than('Username', 3)
-      self.raise_exception_if_length_is_greater_than('Username', 10)
+      self.raise_exception_if_length_is_greater_than('Username', 15)
       
       # password is greater than 8 bytes
       self.raise_exception_if_required_tag_is_missing('Password')
       self.raise_exception_if_not_string('Password')
-      self.raise_exception_if_length_is_less_than('Password', 8)
       
       # check the Email
       self.raise_exception_if_required_tag_is_missing('Email')
@@ -360,11 +357,11 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_not_a_integer('BrokerID')
 
 
-    elif self.type == 'U10':  #Request Reset Password
+    elif self.type == 'U10':  # Create Password Reset Request
       self.raise_exception_if_required_tag_is_missing('BrokerID')
       self.raise_exception_if_required_tag_is_missing('Email')
 
-    elif self.type == 'U12':  #Reset Password
+    elif self.type == 'U12':  # Process Password Reset Request
       self.raise_exception_if_required_tag_is_missing('Token')
       self.raise_exception_if_required_tag_is_missing('NewPassword')
 
@@ -676,9 +673,9 @@ class JsonMessage(BaseMessage):
     elif self.type == 'B3': # Customer List Response
       pass
 
-    elif self.type == 'B4': # Customer Request
+    elif self.type == 'B4': # Customer Detail Request
       pass
-    elif self.type == 'B5': # Customer Response
+    elif self.type == 'B5': # Customer Detail Response
       pass
 
     elif self.type == 'B6': # Process Withdraw
