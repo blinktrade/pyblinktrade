@@ -276,6 +276,9 @@ class JsonMessage(BaseMessage):
       'A0':  'DbQueryRequest',
       'A1':  'DbQueryResponse',
 
+      'I0': 'UpdateBalanceRequest',
+      'I1': 'UpdateBalanceResponse',
+
       'ERROR': 'ErrorMessage',
     }
 
