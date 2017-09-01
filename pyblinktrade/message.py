@@ -269,6 +269,10 @@ class JsonMessage(BaseMessage):
         
       'S14' : 'CryptoWithdrawNetworkFeeTransferRequest',
       'S15' : 'CryptoWithdrawNetworkFeeTransferResponse',
+      
+      'S16' : 'UserLogonReport',
+      'S17' : 'UserLogonReportAck',
+      
 
       # Administrative messages
       'A0':  'DbQueryRequest',
@@ -834,6 +838,16 @@ class JsonMessage(BaseMessage):
       
       self.raise_exception_if_not_a_integer('Amount')
       self.raise_exception_if_not_greater_than_zero('Amount')
+    
+    elif self.type == 'S16':  # User Logon Report
+      self.raise_exception_if_required_tag_is_missing('LogonRptReqID')
+      self.raise_exception_if_required_tag_is_missing('UserReqID')
+      self.raise_exception_if_required_tag_is_missing('BrokerID')
+      self.raise_exception_if_required_tag_is_missing('ClientID')
+      self.raise_exception_if_required_tag_is_missing('IsApiKey')
+      #self.raise_exception_if_required_tag_is_missing('UserReqType')
+      #self.raise_exception_if_required_tag_is_missing('CancelOnDisconnect')
+      #self.raise_exception_if_required_tag_is_missing('PermissionList')
 
 
   def __contains__(self, value):
