@@ -28,7 +28,7 @@ class InvalidMessageFieldException(InvalidMessageException):
     return 'Invalid value tag(%s)=%s'%(self.tag, self.value)
 
 class BaseMessage(object):
-  MAX_MESSAGE_LENGTH = 4096
+  MAX_MESSAGE_LENGTH = 10024*1000
   def __init__(self, raw_message):
     self.raw_message = raw_message
 
@@ -46,7 +46,7 @@ class BaseMessage(object):
 
 
 class JsonMessage(BaseMessage):
-  MAX_MESSAGE_LENGTH = 1024*1000
+  MAX_MESSAGE_LENGTH = 10024*1000
   def raise_exception_if_required_tag_is_missing(self, tag):
     if tag not in self.message:
       raise InvalidMessageMissingTagException(self.raw_message, self.message, tag)
