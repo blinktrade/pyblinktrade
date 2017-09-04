@@ -66,17 +66,38 @@ class JsonMessage(BaseMessage):
     if not val :
       raise InvalidMessageFieldException(self.raw_message, self.message, tag, val)
 
+  def raise_exception_if_not_string(self, tag):
+    val = self.get(tag)
+    if not( type(val) == str or type(val) == unicode):
+      raise InvalidMessageFieldException(self.raw_message, self.message, tag, val)
+
   def raise_exception_if_not_greater_than_zero(self, tag):
     self.raise_exception_if_not_a_number(tag)
     val = self.get(tag)
     if not val > 0:
       raise InvalidMessageFieldException(self.raw_message, self.message, tag, val)
 
+  def raise_exception_if_optional_field_is_a_negative_number(self, tag):
+    val = self.message.get(tag)
+    if val:
+      if not( type(val) == float or type(val) == int) or val < 0:
+        raise InvalidMessageFieldException(self.raw_message, self.message, tag, val)
+
   def raise_exception_if_not_in(self, tag, list):
     val = self.get(tag)
     if val not in list :
       raise InvalidMessageFieldException(self.raw_message, self.message, tag, val)
 
+  def raise_exception_if_length_is_greater_than(self, tag, length):
+    val = self.get(tag)
+    if len(val) > length:
+      raise InvalidMessageFieldException(self.raw_message, self.message, tag, val)
+
+  def raise_exception_if_length_is_less_than(self, tag, length):
+    val = self.get(tag)
+    if len(val) < length:
+      raise InvalidMessageFieldException(self.raw_message, self.message, tag, val)
+      
   def __str__(self):
     return str(self.message)
 
@@ -116,13 +137,11 @@ class JsonMessage(BaseMessage):
       'D':   'NewOrderSingle',
       'F':   'OrderCancelRequest',
       '8':   'ExecutionReport',
+      '9':   'OrderCancelReject',
       'x':   'SecurityListRequest',
       'y':   'SecurityList',
       'e':   'SecurityStatusRequest',
       'f':   'SecurityStatus',
-      'AN':  'RequestForPositions',
-      'AO':  'RequestForPositionsAck',
-      'AP':  'PositionReport',
 
       # User  messages
       'U0':  'Signup',
@@ -134,10 +153,10 @@ class JsonMessage(BaseMessage):
       'U7':  'WithdrawResponse',
       'U9':  'WithdrawRefresh',
 
-      'U10': 'ResetPasswordRequest',
-      'U11': 'ResetPasswordResponse',
-      'U12': 'ResetPasswordRequest',
-      'U13': 'ResetPasswordResponse',
+      'U10': 'CreatePasswordResetRequest',
+      'U11': 'CreatePasswordResetResponse',
+      'U12': 'ProcessPasswordResetRequest',
+      'U13': 'ProcessPasswordResetResponse',
       'U16': 'EnableDisableTwoFactorAuthenticationRequest',
       'U17': 'EnableDisableTwoFactorAuthenticationResponse',
 
@@ -216,13 +235,19 @@ class JsonMessage(BaseMessage):
       'B1':  'ProcessDepositResponse',
       'B2':  'CustomerListRequest',
       'B3':  'CustomerListResponse',
-      'B4':  'CustomerRequest',
-      'B5':  'CustomerResponse',
+      'B4':  'CustomerDetailRequest',
+      'B5':  'CustomerDetailResponse',
       'B6':  'ProcessWithdraw',
       'B7':  'ProcessWithdrawResponse',
       'B8':  'VerifyCustomerRequest',
       'B9':  'VerifyCustomerResponse',
       'B11': 'VerifyCustomerRefresh',
+      'B12': 'ClearingHistoryRequest',
+      'B13': 'ClearingHistoryResponse',
+      'B14': 'ProcessClearingRequest',
+      'B15': 'ProcessClearingResponse',
+      'B17': 'ProcessClearingRefresh',
+      
 
       # System messages
       'S0':  'AccessLog',
@@ -241,13 +266,20 @@ class JsonMessage(BaseMessage):
 
       'S12': 'DocumentListRequest',
       'S13': 'DocumentListResponse',
-      	
+        
       'S14' : 'CryptoWithdrawNetworkFeeTransferRequest',
-			'S15' : 'CryptoWithdrawNetworkFeeTransferResponse',
+      'S15' : 'CryptoWithdrawNetworkFeeTransferResponse',
+      
+      'S16' : 'UserLogonReport',
+      'S17' : 'UserLogonReportAck',
+      
 
       # Administrative messages
       'A0':  'DbQueryRequest',
       'A1':  'DbQueryResponse',
+
+      'I0': 'UpdateBalanceRequest',
+      'I1': 'UpdateBalanceResponse',
 
       'ERROR': 'ErrorMessage',
     }
@@ -309,25 +341,31 @@ class JsonMessage(BaseMessage):
       #TODO: Validate all fields of Logon Message
 
     elif self.type == 'U0':  #Signup
+      # Username must be between 3 bytes and 10 bytes
       self.raise_exception_if_required_tag_is_missing('Username')
+      self.raise_exception_if_not_string('Username')
+      self.raise_exception_if_length_is_less_than('Username', 3)
+      self.raise_exception_if_length_is_greater_than('Username', 15)
+      
+      # password is greater than 8 bytes
       self.raise_exception_if_required_tag_is_missing('Password')
+      self.raise_exception_if_not_string('Password')
+      
+      # check the Email
       self.raise_exception_if_required_tag_is_missing('Email')
-      self.raise_exception_if_required_tag_is_missing('BrokerID')
-
-
-      self.raise_exception_if_empty('Username')
-      self.raise_exception_if_empty('Password')
       self.raise_exception_if_empty('Email')
+      #TODO: create a function to verify the email is valid
+      
+      # check the BrokerID
+      self.raise_exception_if_required_tag_is_missing('BrokerID')
       self.raise_exception_if_not_a_integer('BrokerID')
 
-      #TODO: password is greater than 8 bytes
-      #TODO: email is valid
 
-    elif self.type == 'U10':  #Request Reset Password
+    elif self.type == 'U10':  # Create Password Reset Request
       self.raise_exception_if_required_tag_is_missing('BrokerID')
       self.raise_exception_if_required_tag_is_missing('Email')
 
-    elif self.type == 'U12':  #Reset Password
+    elif self.type == 'U12':  # Process Password Reset Request
       self.raise_exception_if_required_tag_is_missing('Token')
       self.raise_exception_if_required_tag_is_missing('NewPassword')
 
@@ -336,6 +374,7 @@ class JsonMessage(BaseMessage):
 
     elif self.type == 'U18': # Deposit Request
       self.raise_exception_if_required_tag_is_missing('DepositReqID')
+      self.raise_exception_if_optional_field_is_a_negative_number('Value')
 
       if "DepositMethodID" not in self.message and "DepositID" not in self.message  and 'Currency' not in self.message:
         raise InvalidMessageMissingTagException(self.raw_message, self.message, "DepositID,DepositMethodID,Currency")
@@ -638,9 +677,9 @@ class JsonMessage(BaseMessage):
     elif self.type == 'B3': # Customer List Response
       pass
 
-    elif self.type == 'B4': # Customer Request
+    elif self.type == 'B4': # Customer Detail Request
       pass
-    elif self.type == 'B5': # Customer Response
+    elif self.type == 'B5': # Customer Detail Response
       pass
 
     elif self.type == 'B6': # Process Withdraw
@@ -686,6 +725,39 @@ class JsonMessage(BaseMessage):
 
     elif self.type == 'B9': # Verify Customer Response
       self.raise_exception_if_required_tag_is_missing('VerifyCustomerReqID')
+      
+    elif self.type == 'B12': # Clearing History Request
+      self.raise_exception_if_required_tag_is_missing('ClearingHistoryReqID')
+      self.raise_exception_if_required_tag_is_missing('Page')
+      self.raise_exception_if_required_tag_is_missing('PageSize')
+      self.raise_exception_if_not_a_integer('ClearingHistoryReqID')
+      self.raise_exception_if_not_a_integer('Page')
+      self.raise_exception_if_not_a_integer('PageSize')
+    
+    elif self.type == 'B13': # Clearing History Response
+      self.raise_exception_if_required_tag_is_missing('ClearingHistoryReqID')
+    
+    elif self.type == 'B14': # Process Clearing Request
+      self.raise_exception_if_required_tag_is_missing('ProcessClearingReqID')
+      self.raise_exception_if_required_tag_is_missing('Action')
+    
+    elif self.type == 'B15': # Process Clearing Response
+      self.raise_exception_if_required_tag_is_missing('ProcessClearingReqID')
+      self.raise_exception_if_required_tag_is_missing('ClearingProcessID')
+      self.raise_exception_if_required_tag_is_missing('ClearingStatus')
+      self.raise_exception_if_required_tag_is_missing('PartyBrokerID')
+      self.raise_exception_if_required_tag_is_missing('CounterPartyBrokerID')
+      self.raise_exception_if_required_tag_is_missing('PartyBrokerSettlementAccount')
+      self.raise_exception_if_required_tag_is_missing('CounterPartyBrokerSettlementAccount')
+      
+    
+    elif self.type == 'B17': # Process Clearing Refresh
+      self.raise_exception_if_required_tag_is_missing('ClearingProcessID')
+      self.raise_exception_if_required_tag_is_missing('ClearingStatus')
+      self.raise_exception_if_required_tag_is_missing('PartyBrokerID')
+      self.raise_exception_if_required_tag_is_missing('CounterPartyBrokerID')
+      self.raise_exception_if_required_tag_is_missing('PartyBrokerSettlementAccount')
+      self.raise_exception_if_required_tag_is_missing('CounterPartyBrokerSettlementAccount')
 
     elif self.type == 'S2': # Away Market Ticker Request
       self.raise_exception_if_required_tag_is_missing('AwayMarketTickerReqID')
@@ -766,6 +838,16 @@ class JsonMessage(BaseMessage):
       
       self.raise_exception_if_not_a_integer('Amount')
       self.raise_exception_if_not_greater_than_zero('Amount')
+    
+    elif self.type == 'S16':  # User Logon Report
+      self.raise_exception_if_required_tag_is_missing('LogonRptReqID')
+      self.raise_exception_if_required_tag_is_missing('UserReqID')
+      self.raise_exception_if_required_tag_is_missing('BrokerID')
+      self.raise_exception_if_required_tag_is_missing('ClientID')
+      self.raise_exception_if_required_tag_is_missing('IsApiKey')
+      #self.raise_exception_if_required_tag_is_missing('UserReqType')
+      #self.raise_exception_if_required_tag_is_missing('CancelOnDisconnect')
+      #self.raise_exception_if_required_tag_is_missing('PermissionList')
 
 
   def __contains__(self, value):
