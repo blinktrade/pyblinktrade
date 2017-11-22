@@ -276,6 +276,7 @@ class JsonMessage(BaseMessage):
 
       'I0': 'UpdateBalanceRequest',
       'I1': 'UpdateBalanceResponse',
+      'I2': 'FundTransferReport',
 
       'ERROR': 'ErrorMessage',
     }
