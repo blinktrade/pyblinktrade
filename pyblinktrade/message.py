@@ -259,8 +259,8 @@ class JsonMessage(BaseMessage):
       'S6':  'RestAPIRequest',
       'S7':  'RestAPIResponse',
       
-      'S8':  'UpdateInstrumentPriceBandRequest',
-      'S9':  'UpdateInstrumentPriceBandResponse',
+      'S8':  'SetInstrumentDefinitionRequest',
+      'S9':  'SetInstrumentDefinitionResponse',
 
       'S10': 'DocumentPublish',
 
@@ -272,7 +272,6 @@ class JsonMessage(BaseMessage):
       
       'S16' : 'UserLogonReport',
       'S17' : 'UserLogonReportAck',
-      
 
       # Administrative messages
       'A0':  'DbQueryRequest',
@@ -806,7 +805,7 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_empty('RemoteIP')
       
       
-    elif self.type == 'S8': #Update Instrument Price Band Request
+    elif self.type == 'S8': #Set/Update Instrument definition
       self.raise_exception_if_required_tag_is_missing('UpdateReqID')
       self.raise_exception_if_required_tag_is_missing('Symbol')
       self.raise_exception_if_required_tag_is_missing('MinPrice')
@@ -816,8 +815,9 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_not_a_integer('MinPrice')
       self.raise_exception_if_not_a_integer('MaxPrice')
    
-    elif self.type == 'S9': #Update Instrument Price Band Response
+    elif self.type == 'S9': #Instrument definition
       self.raise_exception_if_required_tag_is_missing('UpdateReqID')
+      self.raise_exception_if_required_tag_is_missing('Symbol')
 
     elif self.type == 'S12': #Document List Request
       self.raise_exception_if_required_tag_is_missing('DocumentListReqID')
