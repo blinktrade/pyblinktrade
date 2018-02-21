@@ -273,6 +273,20 @@ class JsonMessage(BaseMessage):
       'S16' : 'UserLogonReport',
       'S17' : 'UserLogonReportAck',
 
+      'S20': 'BrokerCreateRequest',
+      'S21': 'BrokerCreateResponse',
+      'S22': 'BrokersListRequest',
+      'S23': 'BrokersListResponse',
+      'S24': 'BrokerAccountsListRequest',
+      'S25': 'BrokerAccountsListResponse',
+      'S26': 'BrokerDeleteRequest',
+      'S27': 'BrokerDeleteResponse',
+
+      'S30': 'AccountCreateRequest',
+      'S31': 'AccountCreateResponse',
+      'S32': 'AccountDeleteRequest',
+      'S33': 'AccountDeleteResponse',
+
       # Administrative messages
       'A0':  'DbQueryRequest',
       'A1':  'DbQueryResponse',
