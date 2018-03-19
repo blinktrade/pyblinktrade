@@ -408,6 +408,7 @@ class JsonMessage(BaseMessage):
 
     elif self.type == 'D':  #New Order Single
       self.raise_exception_if_required_tag_is_missing('ClOrdID')
+      self.raise_exception_if_not_string('ClOrdID')
 
       self.raise_exception_if_required_tag_is_missing('Symbol')
       self.raise_exception_if_empty('Symbol')
