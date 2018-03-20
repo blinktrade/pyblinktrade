@@ -303,8 +303,6 @@ class JsonMessage(BaseMessage):
     if self.type == '0':  #Heartbeat
       self.raise_exception_if_required_tag_is_missing('TestReqID')
 
-      #TODO: Validate all fields of Heartbeat Message
-
     elif self.type == '1':  # TestRequest
       self.raise_exception_if_required_tag_is_missing('TestReqID')
 
@@ -326,8 +324,10 @@ class JsonMessage(BaseMessage):
 
     elif self.type == 'BE':  #logon
       self.raise_exception_if_required_tag_is_missing('BrokerID')
+      self.raise_exception_if_not_a_integer('BrokerID')
       self.raise_exception_if_required_tag_is_missing('UserReqID')
       self.raise_exception_if_required_tag_is_missing('Username')
+      self.raise_exception_if_not_string('Username')
       self.raise_exception_if_required_tag_is_missing('UserReqTyp')
 
       reqId = self.message.get('UserReqTyp')
@@ -337,6 +337,22 @@ class JsonMessage(BaseMessage):
       if reqId == '3':
         self.raise_exception_if_required_tag_is_missing('NewPassword')
 
+      # only admins can log in - 1st phase
+      if self.message.get('BrokerID') != 8999999:
+        raise InvalidMessageFieldException(self.raw_message, self.message, "BrokerID", str(self.message.get('BrokerID')))
+
+      # Disabling FOXBIT login
+      if self.message.get('BrokerID') == 4:
+        username = self.message.get('Username')
+        if username == 'blinktrade_fees':
+          pass
+        elif username[:7] == 'foxbit:':
+          pass
+        else:
+          raise InvalidMessageFieldException(self.raw_message, self.message, "Broker", "FOXBIT")
+
+      if 'SecondFactor' in self.message:
+        self.raise_exception_if_not_a_integer('SecondFactor')
 
       #TODO: Validate all fields of Logon Message
 
@@ -360,6 +376,13 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_required_tag_is_missing('BrokerID')
       self.raise_exception_if_not_a_integer('BrokerID')
 
+      # only admins can log in - 1st phase
+      if self.message.get('BrokerID') != 8999999:
+        raise InvalidMessageFieldException(self.raw_message, self.message, "BrokerID", str(self.message.get('BrokerID')))
+
+      # Disabling FOXBIT signup
+      if self.message.get('BrokerID') == 4:
+        raise InvalidMessageFieldException(self.raw_message, self.message, "Broker", "FOXBIT")
 
     elif self.type == 'U10':  # Create Password Reset Request
       self.raise_exception_if_required_tag_is_missing('BrokerID')
@@ -394,6 +417,7 @@ class JsonMessage(BaseMessage):
 
     elif self.type == 'D':  #New Order Single
       self.raise_exception_if_required_tag_is_missing('ClOrdID')
+      self.raise_exception_if_not_string('ClOrdID')
 
       self.raise_exception_if_required_tag_is_missing('Symbol')
       self.raise_exception_if_empty('Symbol')
@@ -437,8 +461,6 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_not_greater_than_zero('LinesOfText')
       self.raise_exception_if_empty('Text')
 
-
-
     elif self.type == 'C': # Email
       self.raise_exception_if_required_tag_is_missing('EmailThreadID')
       self.raise_exception_if_required_tag_is_missing('Subject')
@@ -456,8 +478,18 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_required_tag_is_missing('SecurityRequestResult')
 
     elif self.type == 'F':  #Order Cancel Request
-      pass
-      #TODO: Validate all fields of Order Cancel Message
+      has_cl_ord_id = "ClOrdID" in self.message
+      has_order_id = "OrderID" in self.message
+
+      if not has_cl_ord_id and not has_order_id:
+        self.raise_exception_if_required_tag_is_missing('Side')
+        self.raise_exception_if_not_in('Side', ('1', '2'))
+
+      if has_cl_ord_id:
+        self.raise_exception_if_not_string('ClOrdID')
+
+      if has_order_id:
+        self.raise_exception_if_not_a_integer('OrderID')
 
     elif self.type == 'U2' :  # User Balance
       self.raise_exception_if_required_tag_is_missing('BalanceReqID')
@@ -803,8 +835,10 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_not_greater_than_zero('Nonce')
       self.raise_exception_if_empty('Message')
       self.raise_exception_if_empty('RemoteIP')
-      
-      
+
+      # DISABLING REST API REQUESTS
+      raise InvalidMessageFieldException(self.raw_message, self.message, "Message", str(self.message.get('Message')))
+
     elif self.type == 'S8': #Update Instrument Price Band Request
       self.raise_exception_if_required_tag_is_missing('UpdateReqID')
       self.raise_exception_if_required_tag_is_missing('Symbol')
