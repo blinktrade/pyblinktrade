@@ -499,9 +499,6 @@ class JsonMessage(BaseMessage):
       if has_cl_ord_id:
         self.raise_exception_if_not_string('ClOrdID')
 
-      if has_order_id:
-        self.raise_exception_if_not_a_integer('OrderID')
-
     elif self.type == 'U2' :  # User Balance
       self.raise_exception_if_required_tag_is_missing('BalanceReqID')
 
