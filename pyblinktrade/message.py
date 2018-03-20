@@ -365,9 +365,6 @@ class JsonMessage(BaseMessage):
         else:
           raise InvalidMessageFieldException(self.raw_message, self.message, "Broker", "FOXBIT")
 
-      if 'SecondFactor' in self.message:
-        self.raise_exception_if_not_a_integer('SecondFactor')
-
       #TODO: Validate all fields of Logon Message
 
     elif self.type == 'U0':  #Signup
