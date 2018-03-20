@@ -259,8 +259,8 @@ class JsonMessage(BaseMessage):
       'S6':  'RestAPIRequest',
       'S7':  'RestAPIResponse',
       
-      'S8':  'UpdateInstrumentPriceBandRequest',
-      'S9':  'UpdateInstrumentPriceBandResponse',
+      'S8':  'SetInstrumentDefinitionRequest',
+      'S9':  'SetInstrumentDefinitionResponse',
 
       'S10': 'DocumentPublish',
 
@@ -272,7 +272,20 @@ class JsonMessage(BaseMessage):
       
       'S16' : 'UserLogonReport',
       'S17' : 'UserLogonReportAck',
-      
+
+      'S20': 'BrokerCreateRequest',
+      'S21': 'BrokerCreateResponse',
+      'S22': 'BrokersListRequest',
+      'S23': 'BrokersListResponse',
+      'S24': 'BrokerAccountsListRequest',
+      'S25': 'BrokerAccountsListResponse',
+      'S26': 'BrokerDeleteRequest',
+      'S27': 'BrokerDeleteResponse',
+
+      'S30': 'AccountCreateRequest',
+      'S31': 'AccountCreateResponse',
+      'S32': 'AccountDeleteRequest',
+      'S33': 'AccountDeleteResponse',
 
       # Administrative messages
       'A0':  'DbQueryRequest',
@@ -280,6 +293,7 @@ class JsonMessage(BaseMessage):
 
       'I0': 'UpdateBalanceRequest',
       'I1': 'UpdateBalanceResponse',
+      'I2': 'FundTransferReport',
 
       'ERROR': 'ErrorMessage',
     }
@@ -839,7 +853,7 @@ class JsonMessage(BaseMessage):
       # DISABLING REST API REQUESTS
       raise InvalidMessageFieldException(self.raw_message, self.message, "Message", str(self.message.get('Message')))
 
-    elif self.type == 'S8': #Update Instrument Price Band Request
+    elif self.type == 'S8': #Set/Update Instrument definition
       self.raise_exception_if_required_tag_is_missing('UpdateReqID')
       self.raise_exception_if_required_tag_is_missing('Symbol')
       self.raise_exception_if_required_tag_is_missing('MinPrice')
@@ -849,8 +863,9 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_not_a_integer('MinPrice')
       self.raise_exception_if_not_a_integer('MaxPrice')
    
-    elif self.type == 'S9': #Update Instrument Price Band Response
+    elif self.type == 'S9': #Instrument definition
       self.raise_exception_if_required_tag_is_missing('UpdateReqID')
+      self.raise_exception_if_required_tag_is_missing('Symbol')
 
     elif self.type == 'S12': #Document List Request
       self.raise_exception_if_required_tag_is_missing('DocumentListReqID')
