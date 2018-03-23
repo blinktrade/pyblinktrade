@@ -338,7 +338,6 @@ class JsonMessage(BaseMessage):
 
     elif self.type == 'BE':  #logon
       self.raise_exception_if_required_tag_is_missing('BrokerID')
-      self.raise_exception_if_not_a_integer('BrokerID')
       self.raise_exception_if_required_tag_is_missing('UserReqID')
       self.raise_exception_if_required_tag_is_missing('Username')
       self.raise_exception_if_not_string('Username')
@@ -350,10 +349,6 @@ class JsonMessage(BaseMessage):
 
       if reqId == '3':
         self.raise_exception_if_required_tag_is_missing('NewPassword')
-
-      # Disabling Invalid Brokers
-      if self.message.get('BrokerID') not in (-1,8999999,1,3,4,5,8,9,11):
-        raise InvalidMessageFieldException(self.raw_message, self.message, "Broker", "FOXBIT")
 
       #TODO: Validate all fields of Logon Message
 
