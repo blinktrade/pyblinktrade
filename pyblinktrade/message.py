@@ -351,19 +351,9 @@ class JsonMessage(BaseMessage):
       if reqId == '3':
         self.raise_exception_if_required_tag_is_missing('NewPassword')
 
-      # only admins can log in - 1st phase
-      if self.message.get('BrokerID') != 8999999:
-        raise InvalidMessageFieldException(self.raw_message, self.message, "BrokerID", str(self.message.get('BrokerID')))
-
-      # Disabling FOXBIT login
-      if self.message.get('BrokerID') == 4:
-        username = self.message.get('Username')
-        if username == 'blinktrade_fees':
-          pass
-        elif username[:7] == 'foxbit:':
-          pass
-        else:
-          raise InvalidMessageFieldException(self.raw_message, self.message, "Broker", "FOXBIT")
+      # Disabling Invalid Brokers
+      if self.message.get('BrokerID') not in (1,3,4,5,8,9,11):
+        raise InvalidMessageFieldException(self.raw_message, self.message, "Broker", "FOXBIT")
 
       #TODO: Validate all fields of Logon Message
 
@@ -387,12 +377,8 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_required_tag_is_missing('BrokerID')
       self.raise_exception_if_not_a_integer('BrokerID')
 
-      # only admins can log in - 1st phase
-      if self.message.get('BrokerID') != 8999999:
-        raise InvalidMessageFieldException(self.raw_message, self.message, "BrokerID", str(self.message.get('BrokerID')))
-
-      # Disabling FOXBIT signup
-      if self.message.get('BrokerID') == 4:
+      # Disabling Invalid Brokers
+      if self.message.get('BrokerID') not in (1,3,4,5,8,9,11):
         raise InvalidMessageFieldException(self.raw_message, self.message, "Broker", "FOXBIT")
 
     elif self.type == 'U10':  # Create Password Reset Request
