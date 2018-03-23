@@ -830,9 +830,6 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_empty('Message')
       self.raise_exception_if_empty('RemoteIP')
 
-      # DISABLING REST API REQUESTS
-      raise InvalidMessageFieldException(self.raw_message, self.message, "Message", str(self.message.get('Message')))
-
     elif self.type == 'S8': #Set/Update Instrument definition
       self.raise_exception_if_required_tag_is_missing('UpdateReqID')
       self.raise_exception_if_required_tag_is_missing('Symbol')
