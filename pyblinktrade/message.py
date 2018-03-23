@@ -352,7 +352,7 @@ class JsonMessage(BaseMessage):
         self.raise_exception_if_required_tag_is_missing('NewPassword')
 
       # Disabling Invalid Brokers
-      if self.message.get('BrokerID') not in (1,3,4,5,8,9,11):
+      if self.message.get('BrokerID') not in (-1,8999999,1,3,4,5,8,9,11):
         raise InvalidMessageFieldException(self.raw_message, self.message, "Broker", "FOXBIT")
 
       #TODO: Validate all fields of Logon Message
@@ -378,7 +378,7 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_not_a_integer('BrokerID')
 
       # Disabling Invalid Brokers
-      if self.message.get('BrokerID') not in (1,3,4,5,8,9,11):
+      if self.message.get('BrokerID') not in (-1,8999999,1,3,4,5,8,9,11):
         raise InvalidMessageFieldException(self.raw_message, self.message, "Broker", "FOXBIT")
 
     elif self.type == 'U10':  # Create Password Reset Request
