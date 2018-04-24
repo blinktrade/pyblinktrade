@@ -350,6 +350,11 @@ class JsonMessage(BaseMessage):
       if reqId == '3':
         self.raise_exception_if_required_tag_is_missing('NewPassword')
 
+      token = self.message.get('Token')
+      if 'Token' in self.message:
+        if token is None or len(token.strip()) == 0:
+          raise InvalidMessageFieldException(self.raw_message, self.message, "Token", "")
+
       #TODO: Validate all fields of Logon Message
 
     elif self.type == 'U0':  #Signup
