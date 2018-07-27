@@ -470,7 +470,7 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_required_tag_is_missing('SecurityRequestResult')
 
     elif self.type == 'F':  #Order Cancel Request
-      has_cl_ord_id = "ClOrdID" in self.message
+      has_cl_ord_id = "ClOrdID" in self.message or 'OrigClOrdID' in self.message
       has_order_id = "OrderID" in self.message
 
       if not has_cl_ord_id and not has_order_id:
@@ -478,7 +478,10 @@ class JsonMessage(BaseMessage):
         self.raise_exception_if_not_in('Side', ('1', '2'))
 
       if has_cl_ord_id:
-        self.raise_exception_if_not_string('ClOrdID')
+        if "ClOrdID" in self.message:
+          self.raise_exception_if_not_string('ClOrdID')
+        if "OrigClOrdID" in self.message:
+          self.raise_exception_if_not_string('OrigClOrdID')
 
     elif self.type == 'U2' :  # User Balance
       self.raise_exception_if_required_tag_is_missing('BalanceReqID')
