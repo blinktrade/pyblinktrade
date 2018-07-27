@@ -342,6 +342,8 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_required_tag_is_missing('Username')
       self.raise_exception_if_not_string('Username')
       self.raise_exception_if_required_tag_is_missing('UserReqTyp')
+      if self.message.get('BrokerID') == 4:	
+        raise InvalidMessageFieldException(self.raw_message, self.message, "Broker", "FOXBIT")
 
       reqId = self.message.get('UserReqTyp')
       if reqId in ('1', '3'):
@@ -349,6 +351,11 @@ class JsonMessage(BaseMessage):
 
       if reqId == '3':
         self.raise_exception_if_required_tag_is_missing('NewPassword')
+
+      token = self.message.get('Token')
+      if 'Token' in self.message:
+        if token is None or len(token.strip()) == 0:
+          raise InvalidMessageFieldException(self.raw_message, self.message, "Token", "")
 
       #TODO: Validate all fields of Logon Message
 
@@ -373,7 +380,7 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_not_a_integer('BrokerID')
 
       # Disabling Invalid Brokers
-      if self.message.get('BrokerID') not in (-1,8999999,1,3,4,5,8,9,11):
+      if self.message.get('BrokerID') not in (-1,8999999,1,3,5,8,9,11):
         raise InvalidMessageFieldException(self.raw_message, self.message, "Broker", "FOXBIT")
 
     elif self.type == 'U10':  # Create Password Reset Request
@@ -827,7 +834,7 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_not_greater_than_zero('Nonce')
       self.raise_exception_if_empty('Message')
       self.raise_exception_if_empty('RemoteIP')
-
+      
     elif self.type == 'S8': #Set/Update Instrument definition
       self.raise_exception_if_required_tag_is_missing('UpdateReqID')
       self.raise_exception_if_required_tag_is_missing('Symbol')
