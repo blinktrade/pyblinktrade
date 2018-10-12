@@ -287,6 +287,8 @@ class JsonMessage(BaseMessage):
       'S32': 'AccountDeleteRequest',
       'S33': 'AccountDeleteResponse',
 
+      'S34': 'CheckpointRequest',
+
       # Administrative messages
       'A0':  'DbQueryRequest',
       'A1':  'DbQueryResponse',
