@@ -298,6 +298,9 @@ class JsonMessage(BaseMessage):
       'S34': 'CheckpointRequest',
       'S35': 'CheckpointResponse',
 
+      'S36': 'NewTradingSessionRequest',
+      'S37': 'NewTradingSessionResponse',
+
       # Administrative messages
       'A0':  'DbQueryRequest',
       'A1':  'DbQueryResponse',
