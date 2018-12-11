@@ -799,6 +799,27 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_required_tag_is_missing('PartyBrokerSettlementAccount')
       self.raise_exception_if_required_tag_is_missing('CounterPartyBrokerSettlementAccount')
 
+    elif self.type == 'B20': # Add Bank Statement Record 
+      self.raise_exception_if_required_tag_is_missing('StatementRecordAddReqID')
+      self.raise_exception_if_required_tag_is_missing('StatementRecordID')
+      self.raise_exception_if_required_tag_is_missing('BankAccountCode')
+      self.raise_exception_if_required_tag_is_missing('DateTime')
+      self.raise_exception_if_required_tag_is_missing('Amount')
+      self.raise_exception_if_required_tag_is_missing('Operation')
+      self.raise_exception_if_not_a_integer('StatementRecordID')
+      self.raise_exception_if_not_a_integer('Amount')
+
+    elif self.type == 'B22': # Statement Record List Request
+      self.raise_exception_if_required_tag_is_missing('StatementRecordListReqID')
+
+    elif self.type == 'B24': # Bank Account List Request
+      self.raise_exception_if_required_tag_is_missing('BankAccountListReqID')
+
+    elif self.type == 'B26': # Match Statement Records Request 
+      self.raise_exception_if_required_tag_is_missing('MatchStmntRcrdsReqID')
+      self.raise_exception_if_required_tag_is_missing('SR1ID')
+      self.raise_exception_if_required_tag_is_missing('SR2ID')
+
     elif self.type == 'S2': # Away Market Ticker Request
       self.raise_exception_if_required_tag_is_missing('AwayMarketTickerReqID')
       self.raise_exception_if_required_tag_is_missing('Market')
