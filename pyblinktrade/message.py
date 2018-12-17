@@ -249,13 +249,13 @@ class JsonMessage(BaseMessage):
       'B17': 'ProcessClearingRefresh',
       'B20': 'StatementRecordAddRequest',
       'B21': 'StatementRecordAddResponse',
-      'B22': 'StatementRecordsListRequest',
-      'B23': 'StatementRecordsListResponse',
+      'B23': 'StatementRecordAddRefresh',
       'B24': 'BankAccountListRequest',
       'B25': 'BankAccountListResponse',
       'B26': 'StatementRecordsMatchRequest',
       'B27': 'StatementRecordsMatchResponse',
-      
+      'B28': 'StatementRecordsListRequest',
+      'B29': 'StatementRecordsListResponse',
 
       # System messages
       'S0':  'AccessLog',
@@ -809,9 +809,6 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_not_a_integer('StatementRecordID')
       self.raise_exception_if_not_a_integer('Amount')
 
-    elif self.type == 'B22': # Statement Record List Request
-      self.raise_exception_if_required_tag_is_missing('StatementRecordListReqID')
-
     elif self.type == 'B24': # Bank Account List Request
       self.raise_exception_if_required_tag_is_missing('BankAccountListReqID')
 
@@ -819,6 +816,9 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_required_tag_is_missing('MatchStmntRcrdsReqID')
       self.raise_exception_if_required_tag_is_missing('SR1ID')
       self.raise_exception_if_required_tag_is_missing('SR2ID')
+
+    elif self.type == 'B28': # Statement Record List Request
+      self.raise_exception_if_required_tag_is_missing('StatementRecordListReqID')
 
     elif self.type == 'S2': # Away Market Ticker Request
       self.raise_exception_if_required_tag_is_missing('AwayMarketTickerReqID')
