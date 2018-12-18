@@ -249,12 +249,13 @@ class JsonMessage(BaseMessage):
       'B17': 'ProcessClearingRefresh',
       'B20': 'StatementRecordAddRequest',
       'B21': 'StatementRecordAddResponse',
-      'B22': 'StatementRecordsListRequest',
-      'B23': 'StatementRecordsListResponse',
+      'B23': 'StatementRecordsListRefresh',
       'B24': 'BankAccountListRequest',
       'B25': 'BankAccountListResponse',
       'B26': 'StatementRecordsMatchRequest',
       'B27': 'StatementRecordsMatchResponse',
+      'B28': 'StatementRecordsListRequest',
+      'B29': 'StatementRecordsListResponse',
       
 
       # System messages
