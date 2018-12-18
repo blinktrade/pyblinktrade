@@ -247,6 +247,16 @@ class JsonMessage(BaseMessage):
       'B14': 'ProcessClearingRequest',
       'B15': 'ProcessClearingResponse',
       'B17': 'ProcessClearingRefresh',
+      'B20': 'StatementRecordAddRequest',
+      'B21': 'StatementRecordAddResponse',
+      'B23': 'StatementRecordsListRefresh',
+      'B24': 'BankAccountListRequest',
+      'B25': 'BankAccountListResponse',
+      'B26': 'StatementRecordsMatchRequest',
+      'B27': 'StatementRecordsMatchResponse',
+      'B28': 'StatementRecordsListRequest',
+      'B29': 'StatementRecordsListResponse',
+
       
 
       # System messages
@@ -697,7 +707,7 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_empty('ProcessDepositReqID')
 
       self.raise_exception_if_required_tag_is_missing('Action')
-      self.raise_exception_if_not_in('Action', ['CONFIRM', 'CANCEL', 'PROGRESS', 'COMPLETE'])
+      self.raise_exception_if_not_in('Action', ['CONFIRM', 'CANCEL', 'PROGRESS', 'COMPLETE', 'MATCH'])
 
 
     elif self.type == 'B2': # Customer List Request
@@ -718,12 +728,13 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_not_a_integer('ProcessWithdrawReqID')
       self.raise_exception_if_not_greater_than_zero('ProcessWithdrawReqID')
 
-      self.raise_exception_if_required_tag_is_missing('WithdrawID')
-      self.raise_exception_if_not_a_integer('WithdrawID')
-      self.raise_exception_if_not_greater_than_zero('WithdrawID')
+      if 'StatementRecordID' not in self.message or self.get('Action') != 'MATCH':
+        self.raise_exception_if_required_tag_is_missing('WithdrawID')
+        self.raise_exception_if_not_a_integer('WithdrawID')
+        self.raise_exception_if_not_greater_than_zero('WithdrawID')
 
       self.raise_exception_if_required_tag_is_missing('Action')
-      self.raise_exception_if_not_in('Action', ['CANCEL', 'PROGRESS', 'COMPLETE'])
+      self.raise_exception_if_not_in('Action', ['CANCEL', 'PROGRESS', 'COMPLETE', 'MATCH'])
 
 
     elif self.type == 'B7': # Process Withdraw
