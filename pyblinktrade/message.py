@@ -808,6 +808,7 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_required_tag_is_missing('Operation')
       self.raise_exception_if_not_a_integer('StatementRecordID')
       self.raise_exception_if_not_a_integer('Amount')
+      self.raise_exception_if_not_greater_than_zero('Amount')
 
     elif self.type == 'B24': # Bank Account List Request
       self.raise_exception_if_required_tag_is_missing('BankAccountListReqID')
