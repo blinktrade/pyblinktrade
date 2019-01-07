@@ -739,11 +739,6 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_required_tag_is_missing('ProcessWithdrawReqID')
       self.raise_exception_if_not_a_integer('ProcessWithdrawReqID')
       self.raise_exception_if_not_greater_than_zero('ProcessWithdrawReqID')
-
-      self.raise_exception_if_required_tag_is_missing('WithdrawID')
-      self.raise_exception_if_not_a_integer('WithdrawID')
-      self.raise_exception_if_not_greater_than_zero('WithdrawID')
-
       self.raise_exception_if_required_tag_is_missing('Status')
 
     elif self.type == 'B8': # Verify Customer Request
