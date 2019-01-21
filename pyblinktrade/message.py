@@ -247,7 +247,15 @@ class JsonMessage(BaseMessage):
       'B14': 'ProcessClearingRequest',
       'B15': 'ProcessClearingResponse',
       'B17': 'ProcessClearingRefresh',
-      
+      'B20': 'StatementRecordAddRequest',
+      'B21': 'StatementRecordAddResponse',
+      'B23': 'StatementRecordAddRefresh',
+      'B24': 'BankAccountListRequest',
+      'B25': 'BankAccountListResponse',
+      'B26': 'StatementRecordsMatchRequest',
+      'B27': 'StatementRecordsMatchResponse',
+      'B28': 'StatementRecordsListRequest',
+      'B29': 'StatementRecordsListResponse',
 
       # System messages
       'S0':  'AccessLog',
@@ -703,7 +711,7 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_empty('ProcessDepositReqID')
 
       self.raise_exception_if_required_tag_is_missing('Action')
-      self.raise_exception_if_not_in('Action', ['CONFIRM', 'CANCEL', 'PROGRESS', 'COMPLETE'])
+      self.raise_exception_if_not_in('Action', ['CONFIRM', 'CANCEL', 'PROGRESS', 'COMPLETE', 'MATCH'])
 
 
     elif self.type == 'B2': # Customer List Request
@@ -724,23 +732,19 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_not_a_integer('ProcessWithdrawReqID')
       self.raise_exception_if_not_greater_than_zero('ProcessWithdrawReqID')
 
-      self.raise_exception_if_required_tag_is_missing('WithdrawID')
-      self.raise_exception_if_not_a_integer('WithdrawID')
-      self.raise_exception_if_not_greater_than_zero('WithdrawID')
+      if 'StatementRecordID' not in self.message or self.get('Action') != 'MATCH':
+        self.raise_exception_if_required_tag_is_missing('WithdrawID')
+        self.raise_exception_if_not_a_integer('WithdrawID')
+        self.raise_exception_if_not_greater_than_zero('WithdrawID')
 
       self.raise_exception_if_required_tag_is_missing('Action')
-      self.raise_exception_if_not_in('Action', ['CANCEL', 'PROGRESS', 'COMPLETE'])
+      self.raise_exception_if_not_in('Action', ['CANCEL', 'PROGRESS', 'COMPLETE', 'MATCH'])
 
 
     elif self.type == 'B7': # Process Withdraw
       self.raise_exception_if_required_tag_is_missing('ProcessWithdrawReqID')
       self.raise_exception_if_not_a_integer('ProcessWithdrawReqID')
       self.raise_exception_if_not_greater_than_zero('ProcessWithdrawReqID')
-
-      self.raise_exception_if_required_tag_is_missing('WithdrawID')
-      self.raise_exception_if_not_a_integer('WithdrawID')
-      self.raise_exception_if_not_greater_than_zero('WithdrawID')
-
       self.raise_exception_if_required_tag_is_missing('Status')
 
     elif self.type == 'B8': # Verify Customer Request
@@ -795,6 +799,28 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_required_tag_is_missing('CounterPartyBrokerID')
       self.raise_exception_if_required_tag_is_missing('PartyBrokerSettlementAccount')
       self.raise_exception_if_required_tag_is_missing('CounterPartyBrokerSettlementAccount')
+
+    elif self.type == 'B20': # Add Bank Statement Record 
+      self.raise_exception_if_required_tag_is_missing('StatementRecordAddReqID')
+      self.raise_exception_if_required_tag_is_missing('StatementRecordID')
+      self.raise_exception_if_required_tag_is_missing('BankAccountCode')
+      self.raise_exception_if_required_tag_is_missing('DateTime')
+      self.raise_exception_if_required_tag_is_missing('Amount')
+      self.raise_exception_if_required_tag_is_missing('Operation')
+      self.raise_exception_if_not_a_integer('StatementRecordID')
+      self.raise_exception_if_not_a_integer('Amount')
+      self.raise_exception_if_not_greater_than_zero('Amount')
+
+    elif self.type == 'B24': # Bank Account List Request
+      self.raise_exception_if_required_tag_is_missing('BankAccountListReqID')
+
+    elif self.type == 'B26': # Match Statement Records Request 
+      self.raise_exception_if_required_tag_is_missing('MatchStmntRcrdsReqID')
+      self.raise_exception_if_required_tag_is_missing('SR1ID')
+      self.raise_exception_if_required_tag_is_missing('SR2ID')
+
+    elif self.type == 'B28': # Statement Record List Request
+      self.raise_exception_if_required_tag_is_missing('StatementRecordListReqID')
 
     elif self.type == 'S2': # Away Market Ticker Request
       self.raise_exception_if_required_tag_is_missing('AwayMarketTickerReqID')
