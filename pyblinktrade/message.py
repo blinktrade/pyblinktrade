@@ -926,9 +926,6 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_not_string("Key")
       self.raise_exception_if_required_tag_is_missing("Data")
       self.raise_exception_if_not_string("Data")
-      self.raise_exception_if_required_tag_is_missing("Update")
-      self.raise_exception_if_not_a_integer("Update")
-      self.raise_exception_if_not_in("Update", [0,1])
 
   def __contains__(self, value):
     return value in self.message
