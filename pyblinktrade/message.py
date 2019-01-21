@@ -287,6 +287,12 @@ class JsonMessage(BaseMessage):
       'S32': 'AccountDeleteRequest',
       'S33': 'AccountDeleteResponse',
 
+      'S34': 'GetSystemSavedDataRequest',
+      'S35': 'GetSystemSavedDataResponse',
+
+      'S36': 'SystemSaveDataRequest',
+      'S37': 'SystemSaveDataResponse',
+
       # Administrative messages
       'A0':  'DbQueryRequest',
       'A1':  'DbQueryResponse',
@@ -880,6 +886,23 @@ class JsonMessage(BaseMessage):
       #self.raise_exception_if_required_tag_is_missing('CancelOnDisconnect')
       #self.raise_exception_if_required_tag_is_missing('PermissionList')
 
+    elif self.type == 'S34': #GetSystemSavedData
+      self.raise_exception_if_required_tag_is_missing("GetSystemSavedDataReqID")
+      self.raise_exception_if_not_a_integer('GetSystemSavedDataReqID')
+      self.raise_exception_if_required_tag_is_missing("Key")
+      self.raise_exception_if_not_string("Key")
+
+
+    elif self.type == 'S36':  # SystemSaveData
+      self.raise_exception_if_required_tag_is_missing("SystemSaveDataReqID")
+      self.raise_exception_if_not_a_integer('SystemSaveDataReqID')
+      self.raise_exception_if_required_tag_is_missing("Key")
+      self.raise_exception_if_not_string("Key")
+      self.raise_exception_if_required_tag_is_missing("Data")
+      self.raise_exception_if_not_string("Data")
+      self.raise_exception_if_required_tag_is_missing("Update")
+      self.raise_exception_if_not_a_integer("Update")
+      self.raise_exception_if_not_in("Update", [0,1])
 
   def __contains__(self, value):
     return value in self.message
