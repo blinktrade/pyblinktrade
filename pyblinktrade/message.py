@@ -440,7 +440,7 @@ class JsonMessage(BaseMessage):
 
       self.raise_exception_if_required_tag_is_missing('OrdType')
 
-      self.raise_exception_if_not_in('OrdType', ( '1', '2', '3', '4' )) # market, limited, stop market and stop limited
+      self.raise_exception_if_not_in('OrdType', ( '1', '2', '3', '4', 'P' )) # market, limited, stop market, stop limited and pegged order
 
       if self.get('OrdType') == '2':
         self.raise_exception_if_required_tag_is_missing('Price')  # price is required for limited orders
@@ -457,6 +457,10 @@ class JsonMessage(BaseMessage):
         self.raise_exception_if_required_tag_is_missing('Price')   # price is required for stop limit orders
         self.raise_exception_if_not_a_integer('Price')
         self.raise_exception_if_not_greater_than_zero('Price')
+      elif self.get('OrdType') == 'P':
+        self.raise_exception_if_required_tag_is_missing('PegPriceType')
+        self.raise_exception_if_not_a_integer('PegPriceType')
+        self.raise_exception_if_not_in('PegPriceType', [2, 4, 5]) # 2 = Mid-price peg, 4 = Market peg, 5 = Primary peg
 
       self.raise_exception_if_required_tag_is_missing('OrderQty')
       self.raise_exception_if_not_a_integer('OrderQty')
