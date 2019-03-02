@@ -460,7 +460,6 @@ class JsonMessage(BaseMessage):
       elif self.get('OrdType') == 'P':
         self.raise_exception_if_required_tag_is_missing('PegPriceType')
         self.raise_exception_if_not_a_integer('PegPriceType')
-        self.raise_exception_if_not_in('PegPriceType', [2, 4, 5]) # 2 = Mid-price peg, 4 = Market peg, 5 = Primary peg
 
       self.raise_exception_if_required_tag_is_missing('OrderQty')
       self.raise_exception_if_not_a_integer('OrderQty')
