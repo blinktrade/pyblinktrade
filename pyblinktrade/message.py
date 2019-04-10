@@ -90,7 +90,7 @@ class JsonMessage(BaseMessage):
 
   def raise_exception_if_length_is_greater_than(self, tag, length):
     val = self.get(tag)
-    if len(val) > length:
+    if val is not None and len(val) > length:
       raise InvalidMessageFieldException(self.raw_message, self.message, tag, val)
 
   def raise_exception_if_length_is_less_than(self, tag, length):
@@ -573,6 +573,8 @@ class JsonMessage(BaseMessage):
     elif self.type == 'U26': # Withdraw List Request
       self.raise_exception_if_required_tag_is_missing('WithdrawListReqID')
       self.raise_exception_if_empty('WithdrawListReqID')
+      self.raise_exception_if_length_is_greater_than('StatusList', len([0, 1, 2, 4, 8])) # 0-Pending, 1-Unconfirmed, 2-In-progress, 4-Complete, 8-Cancelled
+
     elif self.type == 'U27': # Withdraw List Response
       self.raise_exception_if_required_tag_is_missing('WithdrawListReqID')
       self.raise_exception_if_empty('WithdrawListReqID')
@@ -587,6 +589,8 @@ class JsonMessage(BaseMessage):
     elif self.type == 'U30': # DepositList Request
       self.raise_exception_if_required_tag_is_missing('DepositListReqID')
       self.raise_exception_if_empty('DepositListReqID')
+      self.raise_exception_if_length_is_greater_than('StatusList', len([0, 1, 2, 4, 8])) # 0-Pending, 1-Unconfirmed, 2-In-progress, 4-Complete, 8-Cancelled
+
     elif self.type == 'U31': # DepositList Response
       self.raise_exception_if_required_tag_is_missing('DepositListReqID')
       self.raise_exception_if_empty('DepositListReqID')
