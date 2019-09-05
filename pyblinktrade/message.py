@@ -651,11 +651,9 @@ class JsonMessage(BaseMessage):
     elif self.type == 'U52': # APIKey Create Request
       self.raise_exception_if_required_tag_is_missing('APIKeyCreateReqID')
       self.raise_exception_if_required_tag_is_missing('Label')
-      self.raise_exception_if_required_tag_is_missing('PermissionList')
-      self.raise_exception_if_required_tag_is_missing('IPWhiteList')
       self.raise_exception_if_empty('APIKeyCreateReqID')
       self.raise_exception_if_empty('Label')
-      self.raise_exception_if_empty('PermissionList')
+      
     elif self.type == 'U53': # APIKey Create Response
       self.raise_exception_if_required_tag_is_missing('APIKeyCreateReqID')
       self.raise_exception_if_required_tag_is_missing('APIKey')
