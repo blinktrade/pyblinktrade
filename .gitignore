@@ -24,3 +24,5 @@ pip-log.txt
 
 files.txt
 
+# Pycharm IDE dir
+.idea

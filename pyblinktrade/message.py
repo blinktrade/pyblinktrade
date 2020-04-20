@@ -90,7 +90,7 @@ class JsonMessage(BaseMessage):
 
   def raise_exception_if_length_is_greater_than(self, tag, length):
     val = self.get(tag)
-    if len(val) > length:
+    if val is not None and len(val) > length:
       raise InvalidMessageFieldException(self.raw_message, self.message, tag, val)
 
   def raise_exception_if_length_is_less_than(self, tag, length):
@@ -249,15 +249,13 @@ class JsonMessage(BaseMessage):
       'B17': 'ProcessClearingRefresh',
       'B20': 'StatementRecordAddRequest',
       'B21': 'StatementRecordAddResponse',
-      'B23': 'StatementRecordsListRefresh',
+      'B23': 'StatementRecordAddRefresh',
       'B24': 'BankAccountListRequest',
       'B25': 'BankAccountListResponse',
       'B26': 'StatementRecordsMatchRequest',
       'B27': 'StatementRecordsMatchResponse',
       'B28': 'StatementRecordsListRequest',
       'B29': 'StatementRecordsListResponse',
-
-      
 
       # System messages
       'S0':  'AccessLog',
@@ -296,6 +294,12 @@ class JsonMessage(BaseMessage):
       'S31': 'AccountCreateResponse',
       'S32': 'AccountDeleteRequest',
       'S33': 'AccountDeleteResponse',
+
+      'S34': 'GetSystemSavedDataRequest',
+      'S35': 'GetSystemSavedDataResponse',
+
+      'S36': 'SystemSaveDataRequest',
+      'S37': 'SystemSaveDataResponse',
 
       # Administrative messages
       'A0':  'DbQueryRequest',
@@ -436,7 +440,7 @@ class JsonMessage(BaseMessage):
 
       self.raise_exception_if_required_tag_is_missing('OrdType')
 
-      self.raise_exception_if_not_in('OrdType', ( '1', '2', '3', '4' )) # market, limited, stop market and stop limited
+      self.raise_exception_if_not_in('OrdType', ( '1', '2', '3', '4', 'P' )) # market, limited, stop market, stop limited and pegged order
 
       if self.get('OrdType') == '2':
         self.raise_exception_if_required_tag_is_missing('Price')  # price is required for limited orders
@@ -453,6 +457,9 @@ class JsonMessage(BaseMessage):
         self.raise_exception_if_required_tag_is_missing('Price')   # price is required for stop limit orders
         self.raise_exception_if_not_a_integer('Price')
         self.raise_exception_if_not_greater_than_zero('Price')
+      elif self.get('OrdType') == 'P':
+        self.raise_exception_if_required_tag_is_missing('PegPriceType')
+        self.raise_exception_if_not_a_integer('PegPriceType')
 
       self.raise_exception_if_required_tag_is_missing('OrderQty')
       self.raise_exception_if_not_a_integer('OrderQty')
@@ -566,6 +573,8 @@ class JsonMessage(BaseMessage):
     elif self.type == 'U26': # Withdraw List Request
       self.raise_exception_if_required_tag_is_missing('WithdrawListReqID')
       self.raise_exception_if_empty('WithdrawListReqID')
+      self.raise_exception_if_length_is_greater_than('StatusList', len([0, 1, 2, 4, 8])) # 0-Pending, 1-Unconfirmed, 2-In-progress, 4-Complete, 8-Cancelled
+
     elif self.type == 'U27': # Withdraw List Response
       self.raise_exception_if_required_tag_is_missing('WithdrawListReqID')
       self.raise_exception_if_empty('WithdrawListReqID')
@@ -580,6 +589,8 @@ class JsonMessage(BaseMessage):
     elif self.type == 'U30': # DepositList Request
       self.raise_exception_if_required_tag_is_missing('DepositListReqID')
       self.raise_exception_if_empty('DepositListReqID')
+      self.raise_exception_if_length_is_greater_than('StatusList', len([0, 1, 2, 4, 8])) # 0-Pending, 1-Unconfirmed, 2-In-progress, 4-Complete, 8-Cancelled
+
     elif self.type == 'U31': # DepositList Response
       self.raise_exception_if_required_tag_is_missing('DepositListReqID')
       self.raise_exception_if_empty('DepositListReqID')
@@ -640,11 +651,9 @@ class JsonMessage(BaseMessage):
     elif self.type == 'U52': # APIKey Create Request
       self.raise_exception_if_required_tag_is_missing('APIKeyCreateReqID')
       self.raise_exception_if_required_tag_is_missing('Label')
-      self.raise_exception_if_required_tag_is_missing('PermissionList')
-      self.raise_exception_if_required_tag_is_missing('IPWhiteList')
       self.raise_exception_if_empty('APIKeyCreateReqID')
       self.raise_exception_if_empty('Label')
-      self.raise_exception_if_empty('PermissionList')
+      
     elif self.type == 'U53': # APIKey Create Response
       self.raise_exception_if_required_tag_is_missing('APIKeyCreateReqID')
       self.raise_exception_if_required_tag_is_missing('APIKey')
@@ -741,11 +750,6 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_required_tag_is_missing('ProcessWithdrawReqID')
       self.raise_exception_if_not_a_integer('ProcessWithdrawReqID')
       self.raise_exception_if_not_greater_than_zero('ProcessWithdrawReqID')
-
-      self.raise_exception_if_required_tag_is_missing('WithdrawID')
-      self.raise_exception_if_not_a_integer('WithdrawID')
-      self.raise_exception_if_not_greater_than_zero('WithdrawID')
-
       self.raise_exception_if_required_tag_is_missing('Status')
 
     elif self.type == 'B8': # Verify Customer Request
@@ -800,6 +804,28 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_required_tag_is_missing('CounterPartyBrokerID')
       self.raise_exception_if_required_tag_is_missing('PartyBrokerSettlementAccount')
       self.raise_exception_if_required_tag_is_missing('CounterPartyBrokerSettlementAccount')
+
+    elif self.type == 'B20': # Add Bank Statement Record 
+      self.raise_exception_if_required_tag_is_missing('StatementRecordAddReqID')
+      self.raise_exception_if_required_tag_is_missing('StatementRecordID')
+      self.raise_exception_if_required_tag_is_missing('BankAccountCode')
+      self.raise_exception_if_required_tag_is_missing('DateTime')
+      self.raise_exception_if_required_tag_is_missing('Amount')
+      self.raise_exception_if_required_tag_is_missing('Operation')
+      self.raise_exception_if_not_a_integer('StatementRecordID')
+      self.raise_exception_if_not_a_integer('Amount')
+      self.raise_exception_if_not_greater_than_zero('Amount')
+
+    elif self.type == 'B24': # Bank Account List Request
+      self.raise_exception_if_required_tag_is_missing('BankAccountListReqID')
+
+    elif self.type == 'B26': # Match Statement Records Request 
+      self.raise_exception_if_required_tag_is_missing('MatchStmntRcrdsReqID')
+      self.raise_exception_if_required_tag_is_missing('SR1ID')
+      self.raise_exception_if_required_tag_is_missing('SR2ID')
+
+    elif self.type == 'B28': # Statement Record List Request
+      self.raise_exception_if_required_tag_is_missing('StatementRecordListReqID')
 
     elif self.type == 'S2': # Away Market Ticker Request
       self.raise_exception_if_required_tag_is_missing('AwayMarketTickerReqID')
@@ -891,6 +917,20 @@ class JsonMessage(BaseMessage):
       #self.raise_exception_if_required_tag_is_missing('CancelOnDisconnect')
       #self.raise_exception_if_required_tag_is_missing('PermissionList')
 
+    elif self.type == 'S34': #GetSystemSavedData
+      self.raise_exception_if_required_tag_is_missing("GetSystemSavedDataReqID")
+      self.raise_exception_if_not_a_integer('GetSystemSavedDataReqID')
+      self.raise_exception_if_required_tag_is_missing("Key")
+      self.raise_exception_if_not_string("Key")
+
+
+    elif self.type == 'S36':  # SystemSaveData
+      self.raise_exception_if_required_tag_is_missing("SystemSaveDataReqID")
+      self.raise_exception_if_not_a_integer('SystemSaveDataReqID')
+      self.raise_exception_if_required_tag_is_missing("Key")
+      self.raise_exception_if_not_string("Key")
+      self.raise_exception_if_required_tag_is_missing("Data")
+      self.raise_exception_if_not_string("Data")
 
   def __contains__(self, value):
     return value in self.message
