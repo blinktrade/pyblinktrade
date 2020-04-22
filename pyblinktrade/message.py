@@ -936,7 +936,7 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_not_string("Data")
 
     elif self.type == 'S38':  # Check2FA
-      self.raise_exception_if_required_tag_is_missing("ClientID")
+      self.raise_exception_if_required_tag_is_missing("SessionID")
       self.raise_exception_if_required_tag_is_missing("SecondFactor")
       self.raise_exception_if_not_string("SecondFactor")
 
