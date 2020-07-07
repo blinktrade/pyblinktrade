@@ -301,8 +301,11 @@ class JsonMessage(BaseMessage):
       'S36': 'SystemSaveDataRequest',
       'S37': 'SystemSaveDataResponse',
 
-      'S38': 'SystemCheck2FARequest',
-      'S39': 'SystemCheck2FAResponse',
+      'S38': 'TradingSessionStatusChangeRequest',
+      'S39': 'TradingSessionStatusChangeResponse',
+
+      'S40': 'SystemCheck2FARequest',
+      'S41': 'SystemCheck2FAResponse',
 
       # Administrative messages
       'A0':  'DbQueryRequest',
@@ -935,14 +938,17 @@ class JsonMessage(BaseMessage):
       self.raise_exception_if_required_tag_is_missing("Data")
       self.raise_exception_if_not_string("Data")
 
-    elif self.type == 'S38':  # Check2FA
+    elif self.type == 'S38':  # TradingSessionStatusChangeRequest
+      self.raise_exception_if_required_tag_is_missing("ReqID")
+      self.raise_exception_if_required_tag_is_missing("TradSesStatus")
+      self.raise_exception_if_not_a_integer("TradSesStatus")
+
+    elif self.type == 'S40':  # SystemCheck2FARequest
       self.raise_exception_if_required_tag_is_missing("SessionID")
       self.raise_exception_if_required_tag_is_missing("SecondFactor")
       self.raise_exception_if_not_string("SecondFactor")
 
-    elif self.type == 'S39':  # Check2FA
-      self.raise_exception_if_required_tag_is_missing("Status")
-      self.raise_exception_if_not_a_integer("Status")
+    
 
   def __contains__(self, value):
     return value in self.message
